@@ -5,7 +5,40 @@
 }
 
 .TopNavigation {
-  border-bottom: solid gray 0.5px;
-  padding: 10px;
+  border-bottom: solid #d4d4d4 1px;
+  padding: 10px 150px 10px 150px;
+  display: flex;
   justify-content: space-between ;
+  align-items: center;
+}
+
+.TopNavigation h1 {
+  font-size: 30px;
+}
+
+.TopNavigation nav {
+  font-size: 20px;
+}
+
+.top-rigth-nav a{
+  margin: 10px;
+}
+
+.main-banner{
+  background-color: black;
+  height: 350px;
+}
+
+.post-meta li {
+  display: inline-block;
+  margin: 5px 15px 5px 15px;
+}
+
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: inherit; /* 부모 요소의 텍스트 색상 상속 */
+  text-decoration: none; /* 기본 밑줄 제거 (선택 사항) */
 }
