@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### next.js 개인 블로그 개발 프로젝트
+웹 개발의 기초와 개발자로서의 성장과 배움을 기록하여 생각을 정리해나가기 위해 만들었습니다
+---
+# 개발 기간
+2025-03-25 ~
+---
+# 개발중점
+아직은 미숙하고 경험이 없기 때문에 이 프로젝트를 통해서 자신의 프로그래밍 철학의 기준을 만들자 라고 생각했습니다\
 
-## Getting Started
+옳고 그름을 알려면 기준을 알아야 하기 때문에 스스로 일관된 규칙을 유지하려고 노력하려고 합니다
+---
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# 2025-03-29
+우선은 backend 부분은 정적 데이터로 테스트용으로 구현 후 프론트를 일정 이상 구현 후 api 구현할 계획 입니다
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+작명 규칙에 대해 곰곰히 생각한 결과
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+리엑트 돔에 의해 랜더링 될 컴포넌트의 경우 첫글자 무조건 대문자 시작
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+api, hooks과 같은 경우 첫글자 소문자 복합 단어의 경우 두번째 단어부터 대문자
 
-## Learn More
+env에 들어갈 전역변수의 경우 전부 대문자
 
-To learn more about Next.js, take a look at the following resources:
+css 클래스명의 경우 소문자 + 하이폰
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+으로 목적에 따라 분류하기로 했다
+---
+추가적으로 컨테이너의 역활을 확실하게 분류하여 사용하기로 했다

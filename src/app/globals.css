@@ -4,35 +4,9 @@
   box-sizing: border-box; /* 박스 크기 계산 방식 설정 */
 }
 
-.TopNavigation {
-  border-bottom: solid #d4d4d4 1px;
-  padding: 10px 150px 10px 150px;
-  display: flex;
-  justify-content: space-between ;
-  align-items: center;
-}
 
-.TopNavigation h1 {
-  font-size: 30px;
-}
 
-.TopNavigation nav {
-  font-size: 20px;
-}
 
-.top-rigth-nav a{
-  margin: 10px;
-}
-
-.main-banner{
-  background-color: black;
-  height: 350px;
-}
-
-.post-meta li {
-  display: inline-block;
-  margin: 5px 15px 5px 15px;
-}
 
 
 a:link,

@@ -1,0 +1,32 @@
+.post-box {
+    width: 600px;
+    margin: 15px;
+    padding: 30px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.meta {
+    color: #737373;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+  
+.date {
+    margin-right: 10px;
+}
+
+.category {}
+
+.view {}
+
+
+.title {
+padding: 10px 0px 10px 0px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+
+  
