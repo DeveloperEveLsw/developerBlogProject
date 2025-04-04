@@ -1,5 +1,6 @@
 import React from 'react'
 import Post from "@/components/Post/Post"
+import PostListContainer from './PostListContainer/PostListContainer'
 const HomeCenterContainer = () => {
     const post_data = {
         title : "제목입니다",
@@ -9,6 +10,7 @@ const HomeCenterContainer = () => {
     }
 return (
     <div>
+        <PostListContainer></PostListContainer>
         <Post {...post_data}>
         </Post>
         <Post {...post_data}>
