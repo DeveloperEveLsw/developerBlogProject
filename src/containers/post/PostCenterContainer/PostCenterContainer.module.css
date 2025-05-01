@@ -1,0 +1,22 @@
+.container-center {
+
+}
+
+.post-head {
+    border-bottom: solid #d4d4d4 1px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+}
+
+.title {
+
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+}
+
+.context {
+    margin-top: 30px;
+}

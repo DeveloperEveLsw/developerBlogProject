@@ -4,10 +4,15 @@
   box-sizing: border-box; /* 박스 크기 계산 방식 설정 */
 }
 
+.container-box {
+  display: flex;
+  justify-content: center;
+  gap: 70px
+}
 
-
-
-
+.container-center {
+  width: 770px;
+}
 
 a:link,
 a:visited,

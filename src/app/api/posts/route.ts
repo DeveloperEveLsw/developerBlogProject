@@ -1,23 +1,34 @@
 import axios from "axios";
 import { NextRequest , NextResponse} from 'next/server';
+import { transformDate } from "@/utils/transformutils";
+import { PostInterface } from "@/types/types";
+import { SupabasePostsInterface } from "@/types/db";
 
- 
 export async function GET(request: NextRequest) {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+  
+  const base = `${supabaseUrl}/rest/v1/posts` 
+  const select = `?select=id,title,created_at,...category(category:category_text)` 
+  const c_params = request.nextUrl.searchParams.get("category") ? `&category=eq.${request.nextUrl.searchParams.get("category")}` : '';
+  const order = `&order=created_at.desc`
+
   try {
-    const response = await axios.get(`${supabaseUrl}/rest/v1/posts`, {
-      headers: {
-        apikey: supabaseKey,
+    const response = await fetch(
+      `${base}${select}${c_params}${order}`, {
+        method: 'GET',
+        headers: {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json'
       }
-    });
-    return new Response(JSON.stringify(response.data),{
+    }).then( (res)=> res.json());
+    return NextResponse.json(response, {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
-  })
+    })
   } catch (error) {
     console.log("님 에러남")
-    return [];
+    return []
   }
 }

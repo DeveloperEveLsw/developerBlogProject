@@ -1,0 +1,34 @@
+.category-container {
+    margin-top: 50px;
+}
+.categroy-list {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.category-item {
+    display: flex;
+}
+.categroy-list input {
+    display: none;
+}
+.category-item label {
+    transition: background-color 0.3s ease-in-out;
+    border: solid 1px#d4d4d4 ;
+    border-radius: 15px;
+    padding: 10px;
+}
+.category-item label:hover {
+    background-color: #f2f2f2
+}
+
+.category-item input:checked + label {
+    background-color: rgba(203, 238, 255, 0.432);
+}
+
+.category-head {
+    font-size: 30px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #d4d4d4;
+}
