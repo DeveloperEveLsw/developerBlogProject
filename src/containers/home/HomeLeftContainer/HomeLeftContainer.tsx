@@ -15,6 +15,7 @@ const HomeLeftContainer = async () => {
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL 
     
   const response = await fetch(`http://${hostUrl}/api/category`).then((res)=> res.json())
+  console.log(response)
   return (
     <div className={styles["container"]}>
         <Category prop ={props}></Category>
