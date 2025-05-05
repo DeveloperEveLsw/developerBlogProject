@@ -3,3 +3,8 @@ code {
     border-radius: 15px;
     margin: 10px 0px 10px 0px;
 }
+
+hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
