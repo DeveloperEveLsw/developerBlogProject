@@ -12,21 +12,18 @@ const PostPage = () => {
         const newText = e.target.value;
         setText(newText);
     };
-    const chagneTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newTitle = e.target.value;
-        setTitle(newTitle)
-    }
 
   return (
     <div>
         <div className={styles["editor-box"]}>
-            <div className={styles["text-box"]}>
-                <textarea onChange={chagneTitle}></textarea>
-                <textarea onChange={handleChange} className={styles["text"]}></textarea>
-            </div>
-            <div className={styles["markdown-box"]}>
-                <div>{title}</div>
-                <MarkDownRender markdown={text}></MarkDownRender>
+            <textarea></textarea>
+            <div className={styles["content-box"]}>
+                <div className={styles["text-box"]}>
+                    <textarea onChange={handleChange} className={styles["text"]}></textarea>
+                </div>
+                <div className={styles["markdown-box"]}>
+                    <MarkDownRender markdown={text}></MarkDownRender>
+                </div>
             </div>
         </div>
     </div>

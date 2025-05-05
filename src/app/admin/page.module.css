@@ -1,6 +1,10 @@
 .editor-box {
     display: flex;
-    gap: 10px;
+    gap: 10px;   
+    flex-direction: column;
+    margin-top: 16px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 .text-box {    
@@ -9,7 +13,10 @@
 }
 
 .markdown-box {
+    height: 80vh;
     width: 770px;
+    padding: 0px 15px 0px 15px;
+    overflow-y: scroll;
 }
 
 .text {
@@ -17,8 +24,6 @@
     height: 100%;
 }
 
-.markdown {
-    width: 100%; 
-    overflow-y: auto;
-    overflow-x: inherit;
+.content-box {
+    display: flex;
 }
