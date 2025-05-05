@@ -1,0 +1,24 @@
+.editor-box {
+    display: flex;
+    gap: 10px;
+}
+
+.text-box {    
+    width: 45%;
+    height: 70vh;
+}
+
+.markdown-box {
+    width: 770px;
+}
+
+.text {
+    width: 100%;
+    height: 100%;
+}
+
+.markdown {
+    width: 100%; 
+    overflow-y: auto;
+    overflow-x: inherit;
+}
