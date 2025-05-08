@@ -32,3 +32,24 @@ export async function GET(request: NextRequest) {
     return []
   }
 }
+export async function POST(request: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+
+  const req_ = await request.text()
+  const {title, content} = JSON.parse(req_)
+  console.log("제목",title,"내용",content)
+  const response = await fetch(`${supabaseUrl}/rest/v1/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": supabaseKey,
+        //"Authorization": `Bearer ${localStorage.getItem("pwt")}`,
+        "Prefer": "return=minimal" // 성공 시 응답을 최소화
+      },
+      body: JSON.stringify({
+
+      })
+  })
+  return new Response
+}

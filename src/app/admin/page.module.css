@@ -13,7 +13,7 @@
 }
 
 .markdown-box {
-    height: 80vh;
+    height: 70vh;
     width: 770px;
     padding: 0px 15px 0px 15px;
     overflow-y: scroll;
@@ -26,4 +26,13 @@
 
 .content-box {
     display: flex;
+}
+
+.upload-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 32px;
+    margin-right: 70px;
+    gap: 10px;
 }

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
@@ -20,7 +19,6 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({email, password})
         }
     )
-    //console.log(resopne)
-
+    const res = new NextResponse
     return resopne
 }
