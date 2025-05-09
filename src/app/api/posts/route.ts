@@ -36,9 +36,10 @@ export async function POST(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
-  const req_ = await request.text()
-  const {title, content} = JSON.parse(req_)
-  console.log("제목",title,"내용",content)
+  const {title, content} = JSON.parse(await request.text())
+  const token = request.cookies.get("jwt_token")?.value
+  console.log(token)
+  console.log(title,content)
   const response = await fetch(`${supabaseUrl}/rest/v1/posts`, {
       method: "POST",
       headers: {

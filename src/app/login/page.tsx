@@ -3,7 +3,7 @@
 import React from 'react'
 import { useState } from "react"
 import styles from './page.module.css'
-
+import { isError, isSuccess } from '@/utils/isSuccess'
 
 
 
@@ -20,9 +20,8 @@ const LoginPage = () => {
       if (!response.ok) {
         throw new Error('로그인 실패: 서버 응답 오류');
       }
-      const data = await response.json();
-      localStorage.setItem('jwt', data.access_token)
-      return !!data.access_token;
+      if (isSuccess(response.status)) { return true } 
+      else if (isError(response.status)) { return false}
     }
     catch (error){
       return false
@@ -65,7 +64,6 @@ const LoginPage = () => {
         throw new Error("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.")
       }
       else {
-        
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다.")

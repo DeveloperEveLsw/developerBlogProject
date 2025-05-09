@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     //const {email, password} = {email:"lws19121@gmail.com", password:"way0120@"}
     
-    const resopne = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+    const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
         method: 'POST',
         headers: {
             'apikey': supabaseKey,
@@ -19,6 +19,23 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({email, password})
         }
     )
-    const res = new NextResponse
-    return resopne
+    //console.log(response)
+    const res = NextResponse.json(
+        {},
+        {status: response.status,
+        statusText: response.statusText
+        }
+    )
+
+    const {access_token} = await response.json()
+    if (access_token) {
+    res.cookies.set("jwt_token", access_token, {
+        httpOnly: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: 3600,
+      });
+    } 
+    //console.log(res)
+    return res
 }
