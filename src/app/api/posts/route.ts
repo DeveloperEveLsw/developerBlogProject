@@ -8,15 +8,16 @@ export async function GET(request: NextRequest) {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
-  
+  const hostUrl = process.env.NEXT_PUBLIC_HOST_URL as string;
   const base = `${supabaseUrl}/rest/v1/posts` 
-  const select = `?select=id,title,created_at,...category(category:category_text)` 
+  const select = `?select=id,title,created_at,view_count,is_public,...category(category:category_text)` 
+  const p_params = request.nextUrl.searchParams.get("is_public") ? `&is_public=eq.${request.nextUrl.searchParams.get("is_public")}` : '';
   const c_params = request.nextUrl.searchParams.get("category") ? `&category=eq.${request.nextUrl.searchParams.get("category")}` : '';
   const order = `&order=created_at.desc`
 
   try {
     const response = await fetch(
-      `${base}${select}${c_params}${order}`, {
+      `${base}${select}${c_params}${p_params}${order}`, {
         method: 'GET',
         headers: {
         'apikey': supabaseKey,

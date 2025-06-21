@@ -1,5 +1,4 @@
-
-.main-container {
+.mainContainer {
     border-bottom: solid #d4d4d4 1px;
     padding: 10px 150px 10px 150px;
     display: flex;
@@ -7,23 +6,23 @@
     gap: 700px;
     align-items: center;
 }
-.main-container * {
+.mainContainer * {
     white-space: nowrap;
 }
   
-.home-link {
+.homeLink {
     font-size: 30px;
 }
   
-.right-nav {
+.rightNav {
     font-size: 20px;
 }
   
-.right-nav a{
+.rightNav a{
     margin: 10px;
 }
   
-.right-nav a:hover{
+.rightNav a:hover{
     text-shadow: 0.5px -0.5px black;
     margin: 10px;
 }

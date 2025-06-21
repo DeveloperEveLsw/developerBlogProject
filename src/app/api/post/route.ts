@@ -14,8 +14,11 @@ export async function GET(request: NextRequest) {
         apikey: supabaseKey,
       }
     })
+    console.log("response.data")
+    console.log(response.data)
     return NextResponse.json(response.data, {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       })
 }
+

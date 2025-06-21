@@ -1,16 +1,25 @@
 import React from 'react'
-import { PostCenterContainer } from '@/containers/post/PostCenterContainer/PostCenterContainer'
-import PostLeftContainer from '@/containers/post/PostLeftContainer/PostLeftContainer'
-import PostRightContainer from '@/containers/post/PostRightContainer/PostRightContainer'
-
+import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout'
+import { PostContainer } from '@/containers/PostContainer/PostContainer'
 const page = async ( {params}: {params: {post_id: String}} ) => {
   const { post_id } = await params
+  const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
+  
+  const view = await fetch(`http://${hostUrl}/api/posts/${post_id}/view`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const viewData = await view.json()
+  console.log(viewData)
+  
   return (
-    <div className='container-box'>
-        <PostLeftContainer></PostLeftContainer>
-        <PostCenterContainer id={post_id}></PostCenterContainer>
-        <PostRightContainer></PostRightContainer>
-    </div>
+    <ThreeColumnLayout
+      center={
+        <PostContainer id={post_id}></PostContainer>
+      }
+    />
   )
 }
 

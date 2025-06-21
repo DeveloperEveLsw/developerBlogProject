@@ -32,18 +32,18 @@ const PostPage = () => {
 
   return (
     <div>
-        <div className={styles["editor-box"]}>
+        <div className={styles.editorBox}>
             <textarea onChange={changeTitle}></textarea>
-            <div className={styles["content-box"]}>
-                <div className={styles["text-box"]}>
-                    <textarea onChange={changeText} className={styles["text"]}></textarea>
+            <div className={styles.contentBox}>
+                <div className={styles.textBox}>
+                    <textarea onChange={changeText} className={styles.text}></textarea>
                 </div>
-                <div className={styles["markdown-box"]}>
+                <div className={styles.markdownBox}>
                     <MarkDownRender markdown={text}></MarkDownRender>
                 </div>
             </div>
         </div>
-        <div className={styles["upload-box"]}>
+        <div className={styles.uploadBox}>
             <button>임시저장</button>
             <button onClick={upload}>업로드</button>
         </div>
