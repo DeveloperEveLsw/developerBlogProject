@@ -19,3 +19,23 @@ export async function GET(request: NextRequest) {
         headers: { 'Content-Type': 'application/json' }
       })
 }
+export async function PATCH(request: NextRequest) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+  
+
+  const token = request.cookies.get("jwt_token")?.value
+  if (token) {}
+  const id = request.nextUrl.searchParams.get("id")
+  const data = request.json()
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/posts?id=eq.${id}`,{
+    method: "PATCH",
+    headers: {
+      'apikey': supabaseKey,
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  })
+}

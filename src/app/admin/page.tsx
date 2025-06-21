@@ -1,54 +1,30 @@
-"use client"
+import ErrorPage from '@/components/ErrorPage/ErrorPage'
+import PostListContainer from '@/containers/home/HomeCenterContainer/PostListContainer/PostListContainer'
+import { NextResponse } from 'next/server'
+import React from 'react'
 
-import MarkDownRender from '@/components/MarkdownRender/MarkDownRender';
-import React, { useState } from 'react'
-import styles from './page.module.css'
 
 
-const PostPage = () => {
-    const [text, setText] = useState(""); // 입력 값 상태
-    const [title, setTitle] = useState("");
-
-    const changeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newText = e.target.value;
-        setText(newText);
-    };
-
-    const changeTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newTitle = e.target.value
-        setTitle(newTitle);
-    }
-
-    const upload = async ()=>{
-        const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
-        
-
-        const response = await fetch(`http://${hostUrl}/api/posts`,{
-            method: "POST",
-            body: JSON.stringify({title: title, content: text })
-        }
-        )
-    }
-
+const adminPage = async () => {
+  try {
+    const hostUrl = process.env.NEXT_PUBLIC_HOST_URL        
+    const response = await fetch(`http://${hostUrl}/api/auth/verify`, {
+      method: "GET"
+    })
+    console.log(response)
+    if (!response.ok) {   
+      const msg = await response.json().then( (r)=> r.error)
+      return <ErrorPage status={response.status} message={msg}></ErrorPage>
+     }
+  } catch(e) {}
   return (
-    <div>
-        <div className={styles["editor-box"]}>
-            <textarea onChange={changeTitle}></textarea>
-            <div className={styles["content-box"]}>
-                <div className={styles["text-box"]}>
-                    <textarea onChange={changeText} className={styles["text"]}></textarea>
-                </div>
-                <div className={styles["markdown-box"]}>
-                    <MarkDownRender markdown={text}></MarkDownRender>
-                </div>
-            </div>
-        </div>
-        <div className={styles["upload-box"]}>
-            <button>임시저장</button>
-            <button onClick={upload}>업로드</button>
-        </div>
+    <div className='container-box'>
+        <div></div>
+        <PostListContainer isAdmin={true}>
+        </PostListContainer>
+        <div></div>
     </div>
-  )
+  ) 
 }
 
-export default PostPage
+export default adminPage

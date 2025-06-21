@@ -39,7 +39,7 @@ export const PostCenterContainer = async (params:any) => {
         </div>
       </div>
         <div className={styles['context']}>
-          <MarkDownRender markdown={post.context}></MarkDownRender>
+          <MarkDownRender markdown={post.content}></MarkDownRender>
         </div>
     </div>
   )
