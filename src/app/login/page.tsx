@@ -74,7 +74,7 @@ const LoginPage = () => {
 
 
   return (
-    <div className={styles["card"]}>
+    <div className={styles.card}>
       <div>
         <div>
           로그인
@@ -83,14 +83,14 @@ const LoginPage = () => {
           계정에 로그인하려면 이메일과 비밀번호를 입력하세요.
         </div>
       </div>
-      <form className={styles["form-box"]} onSubmit={handleSubmit}>
+      <form className={styles.formBox} onSubmit={handleSubmit}>
         {error && (
-        <div className={styles["error-box"]}>
+        <div className={styles.errorBox}>
           {error}
         </div>
       )
       }
-        <div className={styles["input-box"]}>
+        <div className={styles.inputBox}>
           <label htmlFor="password">이메일</label>
           <input
             id="email"
@@ -100,7 +100,7 @@ const LoginPage = () => {
             disabled={isLoading}>
           </input>
         </div>
-        <div className={styles["input-box"]}>
+        <div className={styles.inputBox}>
           <label htmlFor="password">비밀번호</label>
           <input
             id="password"
@@ -110,7 +110,7 @@ const LoginPage = () => {
             disabled={isLoading}>
           </input>
         </div>
-        <button type="submit" className={styles["button-box"]} disabled={isLoading}>
+        <button type="submit" className={styles.buttonBox} disabled={isLoading}>
             {isLoading ? "로그인 중..." : "로그인"}
         </button>
       </form>

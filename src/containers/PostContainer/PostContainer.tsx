@@ -1,13 +1,13 @@
 import React from 'react'
 import { PostInterface } from '@/types/types'
 import { transformDate } from '@/utils/transformutils'
-import styles from './PostCenterContainer.module.css'
+import styles from './PostContainer.module.css'
 import "highlight.js/styles/github.css"; 
 
 import '@/components/MarkdownRender/MarkDownRender'
 import MarkDownRender from '@/components/MarkdownRender/MarkDownRender';
 
-export const PostCenterContainer = async (params:any) => {
+export const PostContainer = async (params:any) => {
 
   const form = [
     ['year',    '%'],
@@ -17,9 +17,6 @@ export const PostCenterContainer = async (params:any) => {
     ['minutes', '%:'],
     ['seconds', '%']
 ]
-
-
-
 
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
   const alist = await fetch(`http://${hostUrl}/api/post?id=${params.id}`)

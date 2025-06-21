@@ -14,11 +14,14 @@ export async function GET(request: NextRequest) {
         apikey: supabaseKey,
       }
     })
+    console.log("response.data")
+    console.log(response.data)
     return NextResponse.json(response.data, {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       })
 }
+<<<<<<< HEAD
 export async function PATCH(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
@@ -39,3 +42,6 @@ export async function PATCH(request: NextRequest) {
     body: JSON.stringify(data)
   })
 }
+=======
+
+>>>>>>> origin/heads/origin/master
