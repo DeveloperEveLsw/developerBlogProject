@@ -1,22 +1,175 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 20px;
+}
+
 .card {
-    width: 100%;
-    max-width: 28rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 16px;
-    border-radius: 0.5rem;
-    border: 1px solid #d4d4d4;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.3s ease;
 }
 
-.form-box > * + * {
-    margin-top: 16px;
+.card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
-.input-box {
-    display: flex;
-    flex-direction: column;
+.header {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-.button-box {
-    width: 100%;
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.formBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.errorBox {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputBox label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-left: 4px;
+}
+
+.inputBox input {
+  padding: 16px 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.inputBox input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: white;
+}
+
+.inputBox input:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.buttonBox {
+  width: 100%;
+  padding: 16px 24px;
+  background: #000000;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.buttonBox:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.buttonBox:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.buttonBox:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.buttonBox::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.buttonBox:hover::before {
+  left: 100%;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .card {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .inputBox input {
+    padding: 14px 16px;
+  }
+  
+  .buttonBox {
+    padding: 14px 20px;
+  }
 }

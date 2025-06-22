@@ -7,10 +7,5 @@ export interface PostInterface {
     user_email : string,
     tag : string[],
     category : string,
-<<<<<<< HEAD
-    view : string,
-    is_public : boolean
-=======
     view : number
->>>>>>> origin/heads/origin/master
 }

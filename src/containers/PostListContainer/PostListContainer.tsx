@@ -7,13 +7,8 @@ import { SupabasePostsInterface } from '@/types/db';
 const PostListContainer = async ({isAdmin=false}:{isAdmin?:boolean}) => {
     const hostUrl = process.env.NEXT_PUBLIC_HOST_URL 
     
-<<<<<<< HEAD:src/containers/home/HomeCenterContainer/PostListContainer/PostListContainer.tsx
-    const response = await fetch(`http://${hostUrl}/api/posts`).then( (res)=> res.json() )
-    const posts = await response.map( (post: SupabasePostsInterface)=> ({
-=======
     const response = await fetch(`http://${hostUrl}/api/posts?is_public=true`).then( (res)=> res.json() ).then( (data)=> {  console.log("data"); console.log(data); return data })
     const posts = response.map( (post: SupabasePostsInterface)=> ({
->>>>>>> origin/heads/origin/master:src/containers/PostListContainer/PostListContainer.tsx
       ...post,
       id: String(post.id),  
       category: post.category || '',

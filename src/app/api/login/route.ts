@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         }
     )
     const {access_token, refresh_token} = await response.json()
-    
+
     if (access_token) {
       res.cookies.set("jwt_token", access_token, {
         httpOnly: true,

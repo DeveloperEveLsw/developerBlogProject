@@ -6,24 +6,26 @@ export async function POST(request: NextRequest){
     
     try {
         const refreshToken = request.cookies.get("refresh_token")?.value
-        console.log(refreshToken)
-        if (refreshToken) {
-            const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
-                method: "POST",
-                headers: {
+        if (!refreshToken) {
+            return NextResponse.json({error: "리프레시 토큰이 없습니다"}, {status: 401})
+        }
+
+        const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
+            method: "POST",
+            headers: {
                 "apikey": supabaseKey,
                 "Content-Type": "application/json"
-                },
-                body: JSON.stringify({refresh_token: refreshToken})
-            });
-        
-            const res = NextResponse.json(
-                {},
-                {status: response.status,
-                statusText: response.statusText
-                }
-            )
+            },
+            body: JSON.stringify({refresh_token: refreshToken})
+        });
+    
+        if (response.ok) {
             const {access_token, refresh_token} = await response.json()
+            
+            const res = NextResponse.json(
+                { message: "토큰이 성공적으로 갱신되었습니다" },
+                { status: 200 }
+            )
             
             if (access_token) {
                 res.cookies.set("jwt_token", access_token, {
@@ -31,7 +33,7 @@ export async function POST(request: NextRequest){
                     sameSite: "strict",
                     path: "/",
                     maxAge: 3600,
-            });
+                });
             }
             if (refresh_token) {
                 res.cookies.set("refresh_token", refresh_token, {
@@ -39,10 +41,15 @@ export async function POST(request: NextRequest){
                     sameSite: "strict",
                     path: "/api/auth/refresh",
                     maxAge: 86400,
-            });
+                });
             } 
             return res
+        } else if (response.status === 401) {
+            return NextResponse.json({error: "리프레시 토큰이 만료되었습니다"}, {status: 401})
+        } else {
+            return NextResponse.json({error: "토큰 갱신에 실패했습니다"}, {status: response.status})
         }
-        return NextResponse.json({error: "토큰이 없습니다"}, {status: 401})
-    } catch(error) { return NextResponse.json({error: error}, {status: 500}) }
+    } catch(error) { 
+        return NextResponse.json({error: "서버 오류가 발생했습니다"}, {status: 500}) 
+    }
 }
