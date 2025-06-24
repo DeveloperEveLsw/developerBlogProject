@@ -18,13 +18,13 @@ interface Post {
 
 // Supabase 테이블 구조에 맞는 타입
 interface Category {
-  id: number
-  name: string
+  category_id: number
+  category_text: string
 }
 
 interface Tag {
-  id: number
-  name: string
+  tag_id: number
+  tag_text: string
 }
 
 const AdminPage = () => {
@@ -459,7 +459,7 @@ const AdminPage = () => {
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
                     placeholder="새 카테고리 이름"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddCategoryToDB()}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddCategoryToDB()}
                   />
                   <button
                     className={styles.addItemButton}
@@ -476,14 +476,14 @@ const AdminPage = () => {
                 <div className={styles.itemsList}>
                   {categoriesData.length > 0 ? (
                     categoriesData.map((category) => (
-                      <div key={category.id} className={styles.itemCard}>
+                      <div key={category.category_id} className={styles.itemCard}>
                         <div className={styles.itemInfo}>
-                          <span className={styles.itemId}>{category.id}</span>
-                          <span className={styles.itemName}>{category.name}</span>
+                            <span className={styles.itemId}>{category.category_id}</span>
+                          <span className={styles.itemName}>{category.category_text}</span>
                         </div>
                         <button
                           className={styles.deleteItemButton}
-                          onClick={() => handleDeleteCategoryFromDB(category.id, category.name)}
+                          onClick={() => handleDeleteCategoryFromDB(category.category_id, category.category_text)}
                         >
                           삭제
                         </button>
@@ -512,7 +512,7 @@ const AdminPage = () => {
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
                     placeholder="새 태그 이름"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
                   />
                   <button
                     className={styles.addItemButton}
@@ -529,14 +529,14 @@ const AdminPage = () => {
                 <div className={styles.itemsList}>
                   {tagsData.length > 0 ? (
                     tagsData.map((tag) => (
-                      <div key={tag.id} className={styles.itemCard}>
+                      <div key={tag.tag_id} className={styles.itemCard}>
                         <div className={styles.itemInfo}>
-                          <span className={styles.itemId}>{tag.id}</span>
-                          <span className={styles.itemName}>{tag.name}</span>
+                          <span className={styles.itemId}>{tag.tag_id}</span>
+                          <span className={styles.itemName}>{tag.tag_text}</span>
                         </div>
                         <button
                           className={styles.deleteItemButton}
-                          onClick={() => handleDeleteTag(tag.name)}
+                          onClick={() => handleDeleteTag(tag.tag_text)}
                         >
                           삭제
                         </button>

@@ -90,7 +90,6 @@ export async function PATCH(request: NextRequest) {
         }
 
         const id = request.nextUrl.searchParams.get("id");
-        
         if (!id) {
             return NextResponse.json(
                 { error: "포스트 ID가 필요합니다" },
@@ -106,7 +105,6 @@ export async function PATCH(request: NextRequest) {
                 { status: 400 }
             );
         }
-
         const response = await fetch(`${supabaseUrl}/rest/v1/posts?id=eq.${id}`, {
             method: "PATCH",
             headers: {
@@ -136,7 +134,17 @@ export async function PATCH(request: NextRequest) {
             );
         }
 
-        const updatedData = await response.json();
+        let updatedData = null;
+        
+        const responseText = await response.text();
+
+        if (responseText) {
+            try {
+                updatedData = JSON.parse(responseText);
+            } catch (e) {
+                updatedData = {};
+            }
+        }
         
         return NextResponse.json(
             { message: "포스트가 성공적으로 업데이트되었습니다", data: updatedData },

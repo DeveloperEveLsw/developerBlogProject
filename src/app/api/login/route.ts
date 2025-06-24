@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const {email, password} = JSON.parse(req)
 
     //const {email, password} = {email:"lws19121@gmail.com", password:"way0120@"}
-    
+    console.log(email, password);
     const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
         method: 'POST',
         headers: {

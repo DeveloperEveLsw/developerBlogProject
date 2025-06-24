@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get("id");
     
     // 특정 카테고리 조회
-    const params = categoryId ? `?id=eq.${categoryId}` : '';
+    const params = categoryId ? `?category_id=eq.${categoryId}` : '';
     
     const response = await fetch(`${supabaseUrl}/rest/v1/category${params}`, {
       method: 'GET',
@@ -68,17 +68,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name } = body;
+    const { category_text } = body;
 
     // 입력값 검증
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    if (!category_text || typeof category_text !== 'string' || category_text.trim().length === 0) {
       return NextResponse.json(
         { error: '카테고리 이름은 필수이며, 빈 문자열일 수 없습니다.' },
         { status: 400 }
       );
     }
 
-    if (name.trim().length > 50) {
+    if (category_text.trim().length > 50) {
       return NextResponse.json(
         { error: '카테고리 이름은 50자를 초과할 수 없습니다.' },
         { status: 400 }
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 중복 카테고리 확인
-    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?name=eq.${encodeURIComponent(name.trim())}`, {
+    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}`, {
       method: 'GET',
       headers: {
         'apikey': supabaseServiceKey,
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
-        name: name.trim()
+        category_text: category_text.trim()
       })
     });
 
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     }
 
     const newCategory = await response.json();
-    
+    console.log(newCategory)
     return NextResponse.json(newCategory[0], {
       status: 201,
       headers: { 'Content-Type': 'application/json' }
@@ -152,24 +152,24 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id, name } = body;
+    const { category_id, category_text } = body;
 
     // 입력값 검증
-    if (!id || !name) {
+    if (!category_id || !category_text) {
       return NextResponse.json(
         { error: '카테고리 ID와 이름은 모두 필수입니다.' },
         { status: 400 }
       );
     }
 
-    if (typeof name !== 'string' || name.trim().length === 0) {
+    if (typeof category_text !== 'string' || category_text.trim().length === 0) {
       return NextResponse.json(
         { error: '카테고리 이름은 필수이며, 빈 문자열일 수 없습니다.' },
         { status: 400 }
       );
     }
 
-    if (name.trim().length > 50) {
+    if (category_text.trim().length > 50) {
       return NextResponse.json(
         { error: '카테고리 이름은 50자를 초과할 수 없습니다.' },
         { status: 400 }
@@ -177,7 +177,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // 카테고리 존재 확인
-    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?id=eq.${id}`, {
+    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
       method: 'GET',
       headers: {
         'apikey': supabaseServiceKey,
@@ -201,7 +201,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // 중복 이름 확인 (자기 자신 제외)
-    const duplicateResponse = await fetch(`${supabaseUrl}/rest/v1/category?name=eq.${encodeURIComponent(name.trim())}&id=neq.${id}`, {
+    const duplicateResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}&category_id=neq.${category_id}`, {
       method: 'GET',
       headers: {
         'apikey': supabaseServiceKey,
@@ -220,7 +220,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // 카테고리 이름 업데이트
-    const response = await fetch(`${supabaseUrl}/rest/v1/category?id=eq.${id}`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
       method: 'PATCH',
       headers: {
         'apikey': supabaseServiceKey,
@@ -228,7 +228,7 @@ export async function PATCH(request: NextRequest) {
         'Prefer': 'return=representation'
       },
       body: JSON.stringify({
-        name: name.trim()
+        category_text: category_text.trim()
       })
     });
 
@@ -267,10 +267,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { id } = body;
+    const { category_id } = body;
 
     // 입력값 검증
-    if (!id) {
+    if (!category_id) {
       return NextResponse.json(
         { error: '카테고리 ID는 필수입니다.' },
         { status: 400 }
@@ -278,7 +278,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 카테고리 존재 확인
-    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?id=eq.${id}`, {
+    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
       method: 'GET',
       headers: {
         'apikey': supabaseServiceKey,
@@ -302,7 +302,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 해당 카테고리를 사용하는 포스트가 있는지 확인
-    const postsResponse = await fetch(`${supabaseUrl}/rest/v1/posts?category=eq.${existingCategory[0].name}`, {
+    const postsResponse = await fetch(`${supabaseUrl}/rest/v1/posts?category=eq.${existingCategory[0].category_text}`, {
       method: 'GET',
       headers: {
         'apikey': supabaseServiceKey,
@@ -321,7 +321,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 카테고리 삭제
-    const response = await fetch(`${supabaseUrl}/rest/v1/category?id=eq.${id}`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
       method: 'DELETE',
       headers: {
         'apikey': supabaseServiceKey,

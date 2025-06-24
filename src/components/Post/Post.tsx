@@ -7,6 +7,11 @@ import { PostInterface } from '@/types/types';
 const Post = (props: PostInterface & { isAdmin?:boolean }) => {
     const date = new Date(props.created_at)
     const {isAdmin = false} = props
+    
+    // category가 존재하고 비어있지 않은 경우에만 표시
+    const shouldShowCategory = props.category && 
+        (typeof props.category === 'string' ? props.category.trim() !== '' : props.category !== null && props.category !== undefined);
+    
   return (
     <div className={styles.postBox}>
         <Link href={`/post/${props.id}`}>
@@ -15,7 +20,7 @@ const Post = (props: PostInterface & { isAdmin?:boolean }) => {
         <div className={styles.meta}>
             <div>
                 <span className={styles.date}>{`${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`}</span>
-                {props.category && props.category.trim() !== '' && (
+                {shouldShowCategory && (
                     <span className={styles.category}>카테고리 : {props.category}</span>
                 )}
             </div>

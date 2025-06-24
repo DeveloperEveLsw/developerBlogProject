@@ -2,11 +2,12 @@
 
 import React from 'react'
 import { useState } from "react"
+import { useRouter } from 'next/navigation'
 import styles from './page.module.css'
 import { isError, isSuccess } from '@/utils/isSuccess'
 
 const LoginPage = () => {
-  
+  const router = useRouter()
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL 
 
   const onLogin = async function(email:string, password:string) {
@@ -53,7 +54,8 @@ const LoginPage = () => {
         throw new Error("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.")
       }
       else {
-        // 로그인 성공 시 처리
+        // 로그인 성공 시 admin 페이지로 리다이렉트
+        router.push('/admin')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "로그인 중 오류가 발생했습니다.")

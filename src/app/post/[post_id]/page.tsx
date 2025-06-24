@@ -6,7 +6,7 @@ const page = async ( {params}: {params: {post_id: String}} ) => {
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
   
   const view = await fetch(`http://${hostUrl}/api/posts/${post_id}/view`, {
-    method: 'POST',
+    method: 'POST', 
     headers: {
       'Content-Type': 'application/json'
     }

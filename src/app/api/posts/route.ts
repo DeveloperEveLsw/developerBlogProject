@@ -12,7 +12,9 @@ export async function GET(request: NextRequest) {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL as string;
   const base = `${supabaseUrl}/rest/v1/posts` 
-  const select = `?select=id,title,created_at,view_count,is_public,...category(category:category_text)` 
+  
+  // 목록 조회 로직
+  const select = `?select=id,title,created_at,view_count,is_public,category` 
   const p_params = request.nextUrl.searchParams.get("is_public") ? `&is_public=eq.${request.nextUrl.searchParams.get("is_public")}` : '';
   const c_params = request.nextUrl.searchParams.get("category") ? `&category=eq.${request.nextUrl.searchParams.get("category")}` : '';
   const order = `&order=created_at.desc`
@@ -51,7 +53,6 @@ export async function POST(request: NextRequest) {
     const token = request.cookies.get("jwt_token")?.value
     if (token) {
       const {email} = jwt.decode(token) as DecodedToken
-      
       const response = await fetch(`${supabaseUrl}/rest/v1/posts`, {
         method: "POST",
         headers: {
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           title: title,
-          context: content,
+          content: content,
           user_email: `${email}`
           })
       })
