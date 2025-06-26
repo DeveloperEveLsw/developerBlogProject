@@ -1,7 +1,7 @@
 import React from 'react'
 import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout'
 import { PostContainer } from '@/containers/PostContainer/PostContainer'
-const page = async ( {params}: {params: {post_id: String}} ) => {
+const page = async ( {params}: {params: Promise<{post_id: string}>} ) => {
   const { post_id } = await params
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
   
