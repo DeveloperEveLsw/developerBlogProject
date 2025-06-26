@@ -1,6 +1,3 @@
-.container-center {
-
-}
 
 .post-head {
     border-bottom: solid #d4d4d4 1px;
@@ -8,9 +5,6 @@
     margin-top: 10px;
 }
 
-.title {
-
-}
 
 .meta {
     display: flex;
