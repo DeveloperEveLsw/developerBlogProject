@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
       }
     })
     if (response.ok) { 
-      return NextResponse.json(await response.json(), {
+      const data = await response.json();
+      return NextResponse.json(data, {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       })

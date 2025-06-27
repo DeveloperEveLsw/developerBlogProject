@@ -20,30 +20,35 @@ export async function POST(request: NextRequest){
         });
     
         if (response.ok) {
-            const {access_token, refresh_token} = await response.json()
-            
-            const res = NextResponse.json(
-                { message: "토큰이 성공적으로 갱신되었습니다" },
-                { status: 200 }
-            )
-            
-            if (access_token) {
-                res.cookies.set("jwt_token", access_token, {
-                    httpOnly: true,
-                    sameSite: "strict",
-                    path: "/",
-                    maxAge: 3600,
-                });
+            try {
+                const {access_token, refresh_token} = await response.json()
+                
+                const res = NextResponse.json(
+                    { message: "토큰이 성공적으로 갱신되었습니다" },
+                    { status: 200 }
+                )
+                
+                if (access_token) {
+                    res.cookies.set("jwt_token", access_token, {
+                        httpOnly: true,
+                        sameSite: "strict",
+                        path: "/",
+                        maxAge: 3600,
+                    });
+                }
+                if (refresh_token) {
+                    res.cookies.set("refresh_token", refresh_token, {
+                        httpOnly: true,
+                        sameSite: "strict",
+                        path: "/api/auth/refresh",
+                        maxAge: 86400,
+                    });
+                } 
+                return res
+            } catch (jsonError) {
+                console.error('JSON 파싱 오류:', jsonError);
+                return NextResponse.json({error: "응답 파싱 오류"}, {status: 500})
             }
-            if (refresh_token) {
-                res.cookies.set("refresh_token", refresh_token, {
-                    httpOnly: true,
-                    sameSite: "strict",
-                    path: "/api/auth/refresh",
-                    maxAge: 86400,
-                });
-            } 
-            return res
         } else if (response.status === 401) {
             return NextResponse.json({error: "리프레시 토큰이 만료되었습니다"}, {status: 401})
         } else {

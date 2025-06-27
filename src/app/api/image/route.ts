@@ -104,15 +104,23 @@ export async function GET() {
     }
 
     // Supabase Storage REST API로 파일 목록 가져오기
-    const listResponse = await fetch(`${supabaseUrl}/storage/v1/object/blog-image`, {
+    const listResponse = await fetch(`${supabaseUrl}/storage/v1/object/list/blog-image/post`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${supabaseKey}`,
       },
-    }).then(res => {console.log(res); return res});
+    });
 
     if (!listResponse.ok) {
+      console.error('Storage API 응답 오류:', listResponse.status, listResponse.statusText);
       return NextResponse.json({ error: '이미지 목록 가져오기 실패' }, { status: 500 });
+    }
+
+    // 응답이 JSON인지 확인
+    const contentType = listResponse.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error('예상치 못한 응답 타입:', contentType);
+      return NextResponse.json({ error: '잘못된 응답 형식' }, { status: 500 });
     }
 
     const data = await listResponse.json();

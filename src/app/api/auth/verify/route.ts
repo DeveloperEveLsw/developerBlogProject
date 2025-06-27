@@ -20,8 +20,13 @@ export async function GET(request: NextRequest){
         });
 
         if (response.ok) {
-            const userData = await response.json()
-            return NextResponse.json({ user: userData }, { status: 200 })
+            try {
+                const userData = await response.json()
+                return NextResponse.json({ user: userData }, { status: 200 })
+            } catch (jsonError) {
+                console.error('JSON 파싱 오류:', jsonError);
+                return NextResponse.json({error: "응답 파싱 오류"}, {status: 500})
+            }
         } else if (response.status === 401) {
             // 토큰이 만료되었거나 유효하지 않은 경우
             return NextResponse.json({error: "토큰이 만료되었습니다"}, {status: 401})
