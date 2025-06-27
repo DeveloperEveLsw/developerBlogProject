@@ -417,9 +417,9 @@
 
 .emptyState {
   text-align: center;
-  padding: 24px;
+  padding: 40px;
   color: #64748b;
-  font-size: 14px;
+  font-style: italic;
 }
 
 /* 반응형 디자인 업데이트 */
@@ -436,5 +436,102 @@
     flex: 1;
     min-width: 0;
     text-align: center;
+  }
+}
+
+/* 이미지 관리 스타일 */
+.imagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.imageCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.imageCard:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.imagePreview {
+  width: 100%;
+  height: 150px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imageThumbnail {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.imageInfo {
+  padding: 12px;
+}
+
+.imageName {
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+.imageMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.imageActions {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.copyUrlButton,
+.deleteImageButton {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.copyUrlButton {
+  background: #3b82f6;
+  color: white;
+}
+
+.copyUrlButton:hover {
+  background: #2563eb;
+}
+
+.deleteImageButton {
+  background: #ef4444;
+  color: white;
+}
+
+.deleteImageButton:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .imagesGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 } 

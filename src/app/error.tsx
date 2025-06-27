@@ -1,19 +1,9 @@
-'use client'
+"use client"
 
 import ErrorPage from '@/components/ErrorPage/ErrorPage'
-import { useEffect } from 'react'
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
-  useEffect(() => {
-    // 에러 로깅 (선택사항)
-    console.error('Global error:', error)
-  }, [error])
+
+export default function Error() {
 
   return (
     <ErrorPage 

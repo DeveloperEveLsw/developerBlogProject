@@ -1,7 +1,7 @@
 "use client"
 
 import MarkDownRender from '@/components/MarkdownRender/MarkDownRender';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './PostEditor.module.css'
 
 interface PostData {
@@ -16,7 +16,6 @@ interface PostEditorProps {
   mode: 'create' | 'edit';
   postId?: string;
   initialData?: PostData;
-  onSuccess?: () => void;
 }
 
 const onSuccess = () => {
@@ -25,7 +24,7 @@ const onSuccess = () => {
   }
 
 
-const PostEditor = ({ mode, postId, initialData, onSuccess }: PostEditorProps) => {
+const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
   const [postData, setPostData] = useState<PostData>({
     title: "",
     content: "",
@@ -37,6 +36,13 @@ const PostEditor = ({ mode, postId, initialData, onSuccess }: PostEditorProps) =
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(mode === 'edit');
   const [showMarkdownGuide, setShowMarkdownGuide] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL;
 
@@ -145,6 +151,39 @@ const PostEditor = ({ mode, postId, initialData, onSuccess }: PostEditorProps) =
     }));
   };
 
+  // 이미지 제거 함수 추가
+  const handleRemoveImage = async (imageUrl: string) => {
+    try {
+      // URL에서 파일명 추출
+      const urlParts = imageUrl.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      
+      console.log('삭제할 파일명:', fileName);
+      
+      const response = await fetch(`http://${hostUrl}/api/image`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ path: fileName }),
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        console.log('이미지 삭제 성공');
+        // DB에서 삭제가 성공한 후에만 UI에서 제거
+        setUploadedImages(prev => prev.filter(url => url !== imageUrl));
+      } else {
+        const errorData = await response.json();
+        console.error('이미지 삭제 실패:', errorData);
+        alert(errorData.error || '이미지 삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('이미지 삭제 중 오류:', error);
+      alert('이미지 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   // 엔터키로 태그 추가
   const handleTagKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -161,6 +200,86 @@ const PostEditor = ({ mode, postId, initialData, onSuccess }: PostEditorProps) =
   // 마크다운 가이드 토글
   const toggleMarkdownGuide = () => {
     setShowMarkdownGuide(prev => !prev);
+  };
+
+  // 이미지 업로드 토글
+  const toggleImageUpload = () => {
+    setShowImageUpload(prev => !prev);
+  };
+
+  // 이미지 업로드 처리
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드 가능합니다.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`http://${hostUrl}/api/image`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUploadedImages(prev => [...prev, data.url]);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || '이미지 업로드에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('이미지 업로드 오류:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  // 파일 선택 핸들러
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+    // 파일 입력 초기화
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // 드래그 앤 드롭 핸들러
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    const imageFile = files.find(file => file.type.startsWith('image/'));
+    
+    if (imageFile) {
+      handleImageUpload(imageFile);
+    } else {
+      alert('이미지 파일만 업로드 가능합니다.');
+    }
   };
 
   // 임시저장
@@ -417,6 +536,100 @@ const PostEditor = ({ mode, postId, initialData, onSuccess }: PostEditorProps) =
         </div>
       </div>
 
+      {/* 이미지 업로드 섹션 */}
+      <div className={styles.imageUploadSection}>
+        <button 
+          className={styles.guideToggleButton}
+          onClick={toggleImageUpload}
+        >
+          <span>이미지 삽입</span>
+          <span className={`${styles.toggleIcon} ${showImageUpload ? styles.expanded : ''}`}>
+            ▼
+          </span>
+        </button>
+        
+        <div className={`${styles.imageUploadContent} ${showImageUpload ? styles.show : ''}`}>
+          <div className={styles.imageUploadArea}>
+            <div className={styles.imageUploadInfo}>
+              <p className={styles.imageUploadDescription}>
+                포스트에 이미지를 삽입하세요. 이미지 파일을 선택하거나 드래그 앤 드롭하세요.
+              </p>
+              <div className={styles.imageUploadControls}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  className={styles.imageUploadButton}
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingImage}
+                >
+                  {isUploadingImage ? '업로드 중...' : '이미지 선택'}
+                </button>
+                <span className={styles.imageUploadHint}>
+                  또는 이미지를 아래 영역에 드래그하세요
+                </span>
+              </div>
+            </div>
+            <div
+              className={`${styles.imageDropZone} ${dragOver ? styles.dragOver : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              {dragOver ? (
+                <div className={styles.dragMessage}>
+                  이미지를 여기에 드롭하세요
+                </div>
+              ) : (
+                <div className={styles.dropZoneContent}>
+                  <div className={styles.dropZoneIcon}>📷</div>
+                  <p className={styles.dropZoneText}>
+                    이미지를 여기에 드래그하거나<br/>
+                    위의 '이미지 선택' 버튼을 클릭하세요
+                  </p>
+                  <p className={styles.dropZoneHint}>
+                    지원 형식: JPG, PNG, GIF, WebP (최대 5MB)
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 업로드된 이미지 썸네일 리스트 */}
+          {uploadedImages.length > 0 && (
+            <div className={styles.uploadedImagesList}>
+              {uploadedImages.map((url, idx) => (
+                <div
+                  key={url}
+                  className={styles.uploadedImageThumb}
+                  draggable
+                  onDragStart={e => {
+                    e.dataTransfer.setData(
+                      'text/plain',
+                      `<img src='${url}' alt='업로드 이미지' width='300' />`
+                    );
+                  }}
+                >
+                  <img src={url} alt={`업로드 이미지 ${idx + 1}`} className={styles.uploadedImage} />
+                  <button
+                    className={styles.removeImageButton}
+                    onClick={() => handleRemoveImage(url)}
+                    title="이미지 제거"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* 에디터 */}
       <div className={styles.editorContainer}>
         <h2 className={styles.sectionTitle}>내용 작성</h2>
@@ -425,10 +638,29 @@ const PostEditor = ({ mode, postId, initialData, onSuccess }: PostEditorProps) =
           <div className={styles.editorSection}>
             <label className={styles.editorLabel}>마크다운 편집</label>
             <textarea
+              ref={textareaRef}
               className={styles.contentTextarea}
               value={postData.content}
               onChange={handleContentChange}
               placeholder="마크다운으로 포스트 내용을 작성하세요..."
+              onDrop={e => {
+                e.preventDefault();
+                const html = e.dataTransfer.getData('text/plain');
+                if (html) {
+                  const textarea = textareaRef.current;
+                  if (textarea) {
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const currentContent = postData.content;
+                    const newContent = currentContent.substring(0, start) + html + currentContent.substring(end);
+                    setPostData(prev => ({ ...prev, content: newContent }));
+                    setTimeout(() => {
+                      textarea.focus();
+                      textarea.setSelectionRange(start + html.length, start + html.length);
+                    }, 0);
+                  }
+                }
+              }}
             />
           </div>
 
