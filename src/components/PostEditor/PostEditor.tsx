@@ -75,7 +75,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
   const loadPostData = async () => {
     try {
       console.log('포스트 데이터 로드 시작:', postId);
-      const response = await fetch(`http://${hostUrl}/api/post?id=${postId}`, {
+      const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
         credentials: 'include'
       });
 
