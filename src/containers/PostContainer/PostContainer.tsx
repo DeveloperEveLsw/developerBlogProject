@@ -16,16 +16,33 @@ export const PostContainer = async (params:any) => {
     ['hours',   ' %:'],
     ['minutes', '%:'],
     ['seconds', '%']
-]
+  ]
 
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
-  const alist = await fetch(`${hostUrl}/api/post?id=${params.id}`)
-  const data = await alist.json()
-
-  const post = data.map( (post: any)=> ({
-        ...post,
-        created_at: transformDate(post.created_at, form)
-      }))[0]
+  let post: any = {
+    title: '포스트를 불러올 수 없습니다',
+    content: '포스트를 불러오는 중 오류가 발생했습니다.',
+    created_at: '날짜 없음'
+  };
+  
+  try {
+    const alist = await fetch(`${hostUrl}/api/post?id=${params.id}`);
+    
+    if (alist.ok) {
+      const data = await alist.json();
+      if (data && data.length > 0) {
+        post = data.map((post: any) => ({
+          ...post,
+          created_at: transformDate(post.created_at, form)
+        }))[0];
+      }
+    } else {
+      console.error('포스트 가져오기 실패:', alist.status, alist.statusText);
+    }
+  } catch (error) {
+    console.error('포스트 가져오기 중 오류:', error);
+  }
+  
   return (
     <div className="container-center">
       <div className={styles['post-head']}>
