@@ -66,7 +66,7 @@ const AdminPage = () => {
     // 토큰 검증 함수
     const verifyToken = async () => {
     try {
-        const response = await fetch(`http://${hostUrl}/api/auth/verify`, {
+        const response = await fetch(`${hostUrl}/api/auth/verify`, {
         method: "GET",
         credentials: 'include'
         })
@@ -86,7 +86,7 @@ const AdminPage = () => {
     // 토큰 갱신 함수
     const refreshToken = async () => {
     try {
-        const response = await fetch(`http://${hostUrl}/api/auth/refresh`, {
+        const response = await fetch(`${hostUrl}/api/auth/refresh`, {
         method: "POST",
         credentials: 'include'
         })
@@ -114,7 +114,7 @@ const AdminPage = () => {
     // 포스트 데이터 가져오기
     const fetchPosts = async () => {
     try {
-        const response = await fetch(`http://${hostUrl}/api/posts`)
+        const response = await fetch(`${hostUrl}/api/posts`)
         if (response.ok) {
         const data = await response.json()
         const formattedPosts = data.map((post: any) => ({
@@ -152,7 +152,7 @@ const AdminPage = () => {
     // 카테고리 데이터 가져오기
     const fetchCategories = async () => {
     try {
-        const response = await fetch(`http://${hostUrl}/api/category`)
+        const response = await fetch(`${hostUrl}/api/category`)
         if (response.ok) {
         const data = await response.json()
         setCategoriesData(data)
@@ -179,7 +179,7 @@ const AdminPage = () => {
     // 이미지 목록 가져오기
     const fetchImages = async () => {
     try {
-        const response = await fetch(`http://${hostUrl}/api/image`);
+        const response = await fetch(`${hostUrl}/api/image`);
         if (response.ok) {
         const data = await response.json();
         setImages(data);
@@ -235,7 +235,7 @@ const AdminPage = () => {
     const handleDeletePost = async (postId: string) => {
     if (confirm('정말로 이 포스트를 삭제하시겠습니까?')) {
         try {
-        const response = await fetch(`http://${hostUrl}/api/post?id=${postId}`, {
+        const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
             method: 'DELETE',
             headers: {
             'Content-Type': 'application/json'
@@ -256,7 +256,7 @@ const AdminPage = () => {
 
     const handleTogglePublic = async (postId: string, currentStatus: boolean) => {
     try {
-        const response = await fetch(`http://${hostUrl}/api/post`, {
+        const response = await fetch(`${hostUrl}/api/post`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -313,7 +313,7 @@ const AdminPage = () => {
     if (!newCategory.trim()) return
     
     try {
-        const response = await fetch(`http://${hostUrl}/api/category`, {
+        const response = await fetch(`${hostUrl}/api/category`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -337,7 +337,7 @@ const AdminPage = () => {
     const handleDeleteCategoryFromDB = async (categoryId: number, categoryName: string) => {
     if (confirm(`카테고리 "${categoryName}"를 삭제하시겠습니까?`)) {
         try {
-        const response = await fetch(`http://${hostUrl}/api/category`, {
+        const response = await fetch(`${hostUrl}/api/category`, {
             method: 'DELETE',
             headers: {
             'Content-Type': 'application/json'
@@ -361,7 +361,7 @@ const AdminPage = () => {
     const handleDeleteImage = async (imageName: string) => {
     if (confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
         try {
-        const response = await fetch(`http://${hostUrl}/api/image`, {
+        const response = await fetch(`${hostUrl}/api/image`, {
             method: 'DELETE',
             headers: {
             'Content-Type': 'application/json'

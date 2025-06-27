@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   const onLogin = async function(email:string, password:string) {
     try {
-      const response = await fetch(`http://${hostUrl}/api/login`,{
+      const response = await fetch(`${hostUrl}/api/login`,{
         method:'POST',
         body: JSON.stringify({email, password})
       });

@@ -19,7 +19,7 @@ export const PostContainer = async (params:any) => {
 ]
 
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
-  const alist = await fetch(`http://${hostUrl}/api/post?id=${params.id}`)
+  const alist = await fetch(`${hostUrl}/api/post?id=${params.id}`)
   const data = await alist.json()
 
   const post = data.map( (post: any)=> ({
