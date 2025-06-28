@@ -29,7 +29,7 @@ const PostListContainer = async ({isAdmin=false}:{isAdmin?:boolean}) => {
     }
     
     return (
-        <div>
+        <div style={{width: '100%'}}>
             {posts.map((post: PostInterface) => (
                 <Post {...post} key={String(post.id)} isAdmin={isAdmin}></Post>
             ))}

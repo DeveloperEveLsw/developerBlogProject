@@ -1,0 +1,37 @@
+import React from 'react'
+import MarkDownRender from '../MarkdownRender/MarkDownRender'
+import "highlight.js/styles/github.css"; 
+import styles from './PostDetail.module.css'
+
+interface PostInterface {
+    id? : string,
+    title : string,
+    content : string,
+    created_at : string,
+    updated_at? : string,
+    user_email? : string,
+    tag? : string[],
+    category? : string,
+    view? : number
+}
+
+
+const PostDetail = ( {post}: {post: PostInterface}) => {
+  return (
+    <div className={styles.postDetail}>
+      <div className={styles.postDetailHeader}>
+        <title>{post.title}</title>
+        <h1>{post.title}</h1>
+        <div className={styles.meta}>
+          <span>{post.created_at}</span>
+          <span>조회수 0</span>
+        </div>
+      </div>
+        <div className={styles.postDetailContent}>
+          <MarkDownRender markdown={post.content}></MarkDownRender>
+        </div>
+    </div>
+  )
+}
+
+export default PostDetail

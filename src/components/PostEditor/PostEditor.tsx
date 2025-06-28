@@ -160,7 +160,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
       
       console.log('삭제할 파일명:', fileName);
       
-      const response = await fetch(`http://${hostUrl}/api/image`, {
+      const response = await fetch(`${hostUrl}/api/image`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -224,7 +224,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(`http://${hostUrl}/api/image`, {
+      const response = await fetch(`${hostUrl}/api/image`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -288,8 +288,8 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
     try {
       const method = mode === 'create' ? 'POST' : 'PATCH';
       const url = mode === 'create' 
-        ? `http://${hostUrl}/api/posts`
-        : `http://${hostUrl}/api/post`;
+        ? `${hostUrl}/api/posts`
+        : `${hostUrl}/api/post`;
 
       const body = mode === 'create' 
         ? { ...postData, is_public: false }
@@ -334,13 +334,13 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
     try {
       const method = mode === 'create' ? 'POST' : 'PATCH';
       const url = mode === 'create' 
-        ? `http://${hostUrl}/api/posts`
-        : `http://${hostUrl}/api/post?id=${postId}`;
+        ? `${hostUrl}/api/posts`
+        : `${hostUrl}/api/post?id=${postId}`;
 
       const body = mode === 'create' 
         ? { ...postData, is_public: true }
         : { id: Number(postId), ...postData, is_public: true };
-
+      console.log(url);
       const response = await fetch(url, {
         method,
         headers: {

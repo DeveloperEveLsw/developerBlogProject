@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
           user_email: `${email}`
           })
       })
-      console.log(response)
+      //console.log(response)
       return response
     }
     return NextResponse.json({error: "토큰이 없습니다"}, {status: 401})

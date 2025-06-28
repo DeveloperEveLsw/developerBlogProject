@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import PostListContainer from "@/containers/PostListContainer/PostListContainer";
 import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout';
 

@@ -1,28 +1,116 @@
 .mainContainer {
-    border-bottom: solid #d4d4d4 1px;
-    padding: 10px 150px 10px 150px;
-    display: flex;
-    justify-content: center ;
-    gap: 700px;
-    align-items: center;
+  border-bottom: solid #d4d4d4 1px;
+  padding: 10px 150px 10px 150px;
+  display: flex;
+  justify-content: center;
+  gap: 500px;
+  align-items: center;
 }
+
 .mainContainer * {
-    white-space: nowrap;
+  white-space: nowrap;
 }
-  
+
 .homeLink {
-    font-size: 30px;
+  font-size: 30px;
 }
-  
+
 .rightNav {
-    font-size: 20px;
+  font-size: 20px;
 }
-  
-.rightNav a{
-    margin: 10px;
+
+.rightNav a {
+  margin: 2px;
 }
+
+.rightNav a:hover {
+  text-shadow: 0.5px -0.5px black;
+  margin: 2px;
+}
+
+/* 데스크톱 텍스트와 모바일 아이콘 기본 스타일 */
+.desktopText {
+  display: inline;
+}
+
+.mobileIcon {
+  display: none;
+  font-size: 20px;
+}
+
+/* PC (1024px 이상) */
+@media (min-width: 1024px) {
+  .mainContainer {
+    padding: 0 40px;
+  }
   
-.rightNav a:hover{
+  .homeLink a {
+    font-size: 28px;
+  }
+  
+  .rightNav a {
+    font-size: 16px;
+    padding: 20px 24px;
+  }
+  
+  .desktopText {
+    display: inline;
+  }
+  
+  .mobileIcon {
+    display: none;
+  }
+}
+
+/* 모바일 + 태블릿 (1024px 미만) */
+@media (max-width: 1023px) {
+  .mainContainer {
+    padding: 0 16px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+  
+  .homeLink a {
+    font-size: 24px;
+  }
+  
+  .rightNav {
+    gap: 8px;
+  }
+  
+  .rightNav a {
+    font-size: 14px;
+    padding: 12px 16px;
+    margin: 0 2px;
+  }
+  
+  .rightNav a:hover {
     text-shadow: 0.5px -0.5px black;
-    margin: 10px;
+    margin: 0 2px;
+  }
+  
+  
+}
+
+/* 작은 모바일 (480px 미만) */
+@media (max-width: 479px) {
+  .mainContainer {
+    padding: 0 12px;
+  }
+  
+ 
+  .rightNav a {
+    padding: 10px 12px;
+  }
+  
+  .desktopText {
+    display: none;
+  }
+  
+  .mobileIcon {
+    display: inline;
+    font-size: 18px;
+  }
 }
