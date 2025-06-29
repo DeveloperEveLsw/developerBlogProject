@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@shikijs/langs": "^3.7.0",
+    "@shikijs/themes": "^3.7.0",
     "axios": "^1.8.4",
     "highlight.js": "^11.11.1",
     "jsonwebtoken": "^9.0.2",

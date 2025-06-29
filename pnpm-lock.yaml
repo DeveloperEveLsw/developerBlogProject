@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@shikijs/langs':
+        specifier: ^3.7.0
+        version: 3.7.0
+      '@shikijs/themes':
+        specifier: ^3.7.0
+        version: 3.7.0
       axios:
         specifier: ^1.8.4
         version: 1.10.0
