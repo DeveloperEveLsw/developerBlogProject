@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint" 
   },
   "dependencies": {
     "@shikijs/langs": "^3.7.0",
