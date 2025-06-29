@@ -1,6 +1,6 @@
 "use client"
 
-import MarkDownRender from '@/components/MarkdownRender/MarkDownRender';
+import ClientMarkdownRender from './ClientMarkdonwRender';
 import React, { useState, useEffect, useRef } from 'react'
 import styles from './PostEditor.module.css'
 
@@ -668,7 +668,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
           <div className={styles.previewSection}>
             <label className={styles.previewLabel}>미리보기</label>
             <div className={styles.previewContent}>
-              <MarkDownRender markdown={postData.content} />
+              <ClientMarkdownRender markdown={postData.content} />
             </div>
           </div>
         </div>

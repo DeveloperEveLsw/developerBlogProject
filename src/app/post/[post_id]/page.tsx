@@ -29,6 +29,7 @@ const page = async ( {params}: {params: Promise<{post_id: string}>} ) => {
       center={
         <PostContainer id={post_id}></PostContainer>
       }
+      centerMaxWidth={850}
     />
   )
 }

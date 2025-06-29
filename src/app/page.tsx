@@ -11,6 +11,7 @@ export default function Home() {
       center={
         <PostListContainer></PostListContainer>
       }
+      centerMaxWidth={600}
     />
   );
 }

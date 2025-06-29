@@ -17,6 +17,7 @@
 
 .rightNav {
   font-size: 20px;
+  gap: 10px;
 }
 
 .rightNav a {
@@ -38,59 +39,26 @@
   font-size: 20px;
 }
 
-/* PC (1024px 이상) */
-@media (min-width: 1024px) {
-  .mainContainer {
-    padding: 0 40px;
-  }
-  
-  .homeLink a {
-    font-size: 28px;
-  }
-  
-  .rightNav a {
-    font-size: 16px;
-    padding: 20px 24px;
-  }
-  
-  .desktopText {
-    display: inline;
-  }
-  
-  .mobileIcon {
-    display: none;
-  }
+.rightNav a {
+  padding: 20px 12px;
 }
 
+
+
 /* 모바일 + 태블릿 (1024px 미만) */
-@media (max-width: 1023px) {
+@media (max-width: 820px) {
   .mainContainer {
-    padding: 0 16px;
+    padding: 10px 5px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 0;
   }
   
-  .homeLink a {
-    font-size: 24px;
-  }
-  
-  .rightNav {
-    gap: 8px;
-  }
-  
-  .rightNav a {
-    font-size: 14px;
-    padding: 12px 16px;
-    margin: 0 2px;
-  }
-  
-  .rightNav a:hover {
-    text-shadow: 0.5px -0.5px black;
-    margin: 0 2px;
-  }
-  
+
+
+ 
+
   
 }
 
@@ -102,7 +70,7 @@
   
  
   .rightNav a {
-    padding: 10px 12px;
+    padding: 10px 5px;
   }
   
   .desktopText {
