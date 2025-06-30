@@ -4,8 +4,10 @@ import { transformDate } from '@/utils/transformutils'
 import PostDetail from '@/components/PostDetail/PostDetail'
 import { notFound } from 'next/navigation'
 
-export const PostContainer = async (params:any) => {
-
+export const PostContainer = async (params: {id: string}) => {
+  const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
+  const { id } = await params;
+  
   const form = [
     ['year',    '%'],
     ['month',   '.%'],
@@ -27,15 +29,10 @@ export const PostContainer = async (params:any) => {
     view? : number
 }
 
-  const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
-  let post: PostInterface = {
-    title: '포스트를 불러올 수 없습니다',
-    content: '포스트를 불러오는 중 오류가 발생했습니다.',
-    created_at: '날짜 없음'
-  };
-  
+  let post: PostInterface | null = null;
+
   try {
-    const alist = await fetch(`${hostUrl}/api/post?id=${params.id}`);
+    const alist = await fetch(`${hostUrl}/api/post?id=${id}`);
     
     if (alist.ok) {
       const data = await alist.json();
@@ -45,17 +42,15 @@ export const PostContainer = async (params:any) => {
           created_at: transformDate(post.created_at, form)
         }))[0];
       }
-    } else {
-      if (alist.status === 404) {
-        return notFound()
-      }
-      console.error('포스트 가져오기 실패:', alist.status, alist.statusText);
     }
-  } catch (error) {
+  } catch (error) { 
     console.error('포스트 가져오기 중 오류:', error);
+  }
+  if (!post) {
+    notFound();
   }
   
   return (
-    <PostDetail post={post} />
+    <PostDetail post={post as PostInterface} />
   )
 }

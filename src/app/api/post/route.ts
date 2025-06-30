@@ -2,6 +2,7 @@ import { NextRequest , NextResponse} from 'next/server';
 import { transformDate } from "@/utils/transformutils";
 import { PostInterface } from "@/types/types";
 import { SupabasePostsInterface } from "@/types/db";
+import { revalidatePage } from '@/app/actions/revalidatePath';
 
 export async function GET(request: NextRequest) {
     try {
@@ -145,7 +146,7 @@ export async function PATCH(request: NextRequest) {
                 updatedData = {};
             }
         }
-        
+        revalidatePage(`/post/${id}`);
         return NextResponse.json(
             { message: "포스트가 성공적으로 업데이트되었습니다", data: updatedData },
             { status: 200 }
