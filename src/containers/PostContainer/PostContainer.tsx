@@ -2,6 +2,7 @@ import { SupabasePostsInterface } from '@/types/db'
 import { transformDate } from '@/utils/transformutils'
 
 import PostDetail from '@/components/PostDetail/PostDetail'
+import { notFound } from 'next/navigation'
 
 export const PostContainer = async (params:any) => {
 
@@ -45,6 +46,9 @@ export const PostContainer = async (params:any) => {
         }))[0];
       }
     } else {
+      if (alist.status === 404) {
+        return notFound()
+      }
       console.error('포스트 가져오기 실패:', alist.status, alist.statusText);
     }
   } catch (error) {
