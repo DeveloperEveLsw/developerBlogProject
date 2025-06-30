@@ -5,6 +5,7 @@ import rehypeStringify from 'rehype-stringify';
 import { getHighlighter } from './highlighter';
 import rehypeShiki from '@shikijs/rehype'
 import rehypeRaw from 'rehype-raw'
+import remarkBreaks from 'remark-breaks'
 
 const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
     const highlighter = await getHighlighter();
@@ -13,6 +14,7 @@ const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
         .use(remarkParse, {
             commonmark: true
         })
+        .use(remarkBreaks)
         .use(remarkRehype, {
             allowDangerousHtml: true
         })
