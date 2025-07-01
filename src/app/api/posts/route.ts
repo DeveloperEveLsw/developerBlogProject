@@ -1,10 +1,5 @@
-import axios from "axios";
 import { NextRequest , NextResponse} from 'next/server';
-import { transformDate } from "@/utils/transformutils";
-import { PostInterface } from "@/types/types";
-import { SupabasePostsInterface } from "@/types/db";
 import jwt from "jsonwebtoken";
-import { error } from "console";
 
 export async function GET(request: NextRequest) {
 
