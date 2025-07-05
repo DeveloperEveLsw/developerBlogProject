@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         }
 
         const data = await response.json();
-
+        
         if (!data || data.length === 0) {
             return NextResponse.json(
                 { error: "포스트를 찾을 수 없습니다" },

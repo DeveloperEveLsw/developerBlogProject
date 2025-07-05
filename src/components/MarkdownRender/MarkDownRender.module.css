@@ -77,3 +77,14 @@
   padding: 2px 4px 4px 4px;
   background-color: #f4f4f4 !important;
 }
+
+
+.markdownContent td{
+  border: 1px solid black;
+  padding: 4px 8px;
+  text-align: center;
+  font-size: 28px;
+  line-height: 1.3;
+  font-family: 'Consolas';
+  color: #222; 
+}

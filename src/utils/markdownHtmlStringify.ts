@@ -6,6 +6,27 @@ import { getHighlighter } from './highlighter';
 import rehypeShiki from '@shikijs/rehype'
 import rehypeRaw from 'rehype-raw'
 import remarkBreaks from 'remark-breaks'
+import remarkCustomDataBlock from './customDataBlock/customDataBlock'
+import rehypeCustomDataBlock from './customDataBlock/rehypeCustomDataBlock'
+// types.d.ts 또는 프로젝트의 타입 정의 파일에 추가
+import type { Literal } from 'unist';
+import type { ElementContent } from 'hast';
+import type { Properties } from 'hast';
+
+declare module 'mdast' {
+  interface customDataBlock extends Literal {
+    type: 'customDataBlock';
+    data?: {
+      hName?: string;
+      hProperties?: Properties;
+      hChildren?: ElementContent[]; // ⬅️ 여기 타입 바꿔주기!
+    };
+  }
+
+  interface RootContentMap {
+    customDataBlock: customDataBlock;
+  }
+}
 
 const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
     const highlighter = await getHighlighter();
@@ -15,9 +36,13 @@ const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
             commonmark: true
         })
         .use(remarkBreaks)
+        .use(remarkCustomDataBlock)
         .use(remarkRehype, {
-            allowDangerousHtml: true
-        })
+            allowDangerousHtml: true,
+            passThrough: ['customDataBlock']
+            }
+        )
+        .use(rehypeCustomDataBlock)
         .use(rehypeRaw)
         .use(rehypeShiki, {
           highlighter,
@@ -31,5 +56,4 @@ const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
 
     return String(file)
 }
-
 export default markdownHtmlStringify

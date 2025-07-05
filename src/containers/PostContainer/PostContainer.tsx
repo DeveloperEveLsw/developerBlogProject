@@ -26,7 +26,7 @@ export const PostContainer = async (params: {id: string}) => {
     user_email? : string,
     tag? : string[],
     category? : string,
-    view? : number
+    view_count? : string
 }
 
   let post: PostInterface | null = null;

@@ -12,7 +12,7 @@ interface PostInterface {
     user_email? : string,
     tag? : string[],
     category? : string,
-    view? : number
+    view_count? : string
 }
 
 
@@ -24,7 +24,7 @@ const PostDetail = ( {post}: {post: PostInterface}) => {
         <h1>{post.title}</h1>
         <div className={styles.meta}>
           <span>{post.created_at}</span>
-          <span>조회수 0</span>
+          <span>조회수 {post.view_count}</span>
         </div>
       </div>
         <div className={styles.postDetailContent}>
