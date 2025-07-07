@@ -398,7 +398,10 @@
   border-radius: 8px;
   background: white;
   overflow-y: auto;
+  overflow-x: auto;
   line-height: 1.6;
+  max-height: 1000px;
+  
 }
 
 .actionsContainer {
