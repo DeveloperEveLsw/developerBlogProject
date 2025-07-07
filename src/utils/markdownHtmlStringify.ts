@@ -14,17 +14,29 @@ import type { ElementContent } from 'hast';
 import type { Properties } from 'hast';
 
 declare module 'mdast' {
-  interface customDataBlock extends Literal {
-    type: 'customDataBlock';
-    data?: {
-      hName?: string;
-      hProperties?: Properties;
-      hChildren?: ElementContent[]; // ⬅️ 여기 타입 바꿔주기!
-    };
+  interface arrayBlock {
+    type: string,
+    data: number[],
+    style: {
+        index: number[];
+        value: string; // CSS 스타일 문자열
+      }[] | null,
+    children: []
+  }
+
+  interface nestedArrayBlock {
+    type: string,
+    data: number[][],
+    style: {
+        index: number[][];
+        value: string; // CSS 스타일 문자열
+      }[] | null,
+    children: []
   }
 
   interface RootContentMap {
-    customDataBlock: customDataBlock;
+    arrayBlock: arrayBlock,
+    nestedArrayBlock: nestedArrayBlock
   }
 }
 
@@ -39,7 +51,7 @@ const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
         .use(remarkCustomDataBlock)
         .use(remarkRehype, {
             allowDangerousHtml: true,
-            passThrough: ['customDataBlock']
+            passThrough: ['arrayBlock', 'nestedArrayBlock']
             }
         )
         .use(rehypeCustomDataBlock)
