@@ -256,13 +256,12 @@ const AdminPage = () => {
 
     const handleTogglePublic = async (postId: string, currentStatus: boolean) => {
     try {
-        const response = await fetch(`${hostUrl}/api/post`, {
+        const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            id: postId, 
             is_public: !currentStatus 
         }),
         credentials: 'include'

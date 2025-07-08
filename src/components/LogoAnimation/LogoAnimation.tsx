@@ -13,14 +13,14 @@ const LogoAnimation = ({size}: {size:number}) => {
             <text className={styles.l}id="base" fontWeight={logo_weight} fontSize={logo_fontSize} x={logo_x} y={logo_y} fill="black">L</text>
             <text className={styles.b}  x={logo_x+15} y={logo_y} fontWeight={logo_weight} fontSize={logo_fontSize} fill="black">B</text>S
             <rect className={styles.stroke}
-                x="74" 
-                y="30" 
-                width="16" 
+                x="72" 
+                y="32.5" 
+                width="17" 
                 height="56.5" 
                 fill="white"
             />
             <rect className={styles.stroke}
-                x="89" 
+                x="87" 
                 y="83" 
                 width="16" 
                 height="20" 

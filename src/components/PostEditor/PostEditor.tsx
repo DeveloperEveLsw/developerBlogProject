@@ -8,7 +8,7 @@ interface PostData {
   title: string;
   content: string;
   category: number | null;
-  tag: string[] | null;
+  tag: number[] | null;
   is_public: boolean;
 }
 
@@ -46,21 +46,30 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
 
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL;
 
-  // 카테고리 옵션
-  const categories = [
-    { value: "", label: "카테고리 선택" },
-    { value: "javascript", label: "JavaScript" },
-    { value: "react", label: "React" },
-    { value: "nextjs", label: "Next.js" },
-    { value: "typescript", label: "TypeScript" },
-    { value: "css", label: "CSS" },
-    { value: "html", label: "HTML" },
-    { value: "nodejs", label: "Node.js" },
-    { value: "database", label: "Database" },
-    { value: "algorithm", label: "Algorithm" },
-    { value: "project", label: "Project" },
-    { value: "etc", label: "기타" }
-  ];
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([{ value: "", label: "카테고리 선택" }]);
+
+  // 카테고리 로드
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${hostUrl}/api/category`);
+        if (response.ok) {
+          const data = await response.json();
+          const fetchedCategories = data.map((cat: { category_id: number, category_text: string }) => ({
+            value: cat.category_id,
+            label: cat.category_text,
+          }));
+          setCategories([{ value: null, label: "카테고리 선택" }, ...fetchedCategories]);
+        } else {
+          console.error('Failed to fetch categories');
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, [hostUrl]);
 
   // Edit 모드일 때 기존 데이터 로드
   useEffect(() => {
@@ -125,11 +134,12 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
     const value = e.target.value;
     setPostData(prev => ({ 
       ...prev, 
-      category: value === "" ? null : Number(value)
+      category: value === null ? null : Number(value)
     }));
   };
 
   // 태그 추가
+  /*
   const handleAddTag = () => {
     if (newTag.trim()) {
       const currentTags = postData.tag || [];
@@ -150,7 +160,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
       tag: prev.tag ? prev.tag.filter(tag => tag !== tagToRemove) : null
     }));
   };
-
+  */
   // 이미지 제거 함수 추가
   const handleRemoveImage = async (imageUrl: string) => {
     try {
@@ -188,7 +198,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
   const handleTagKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleAddTag();
+      //handleAddTag();
     }
   };
 
@@ -442,7 +452,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
             />
             <button
               className={styles.addTagButton}
-              onClick={handleAddTag}
+              //onClick={handleAddTag}
               disabled={!newTag.trim()}
             >
               추가
@@ -455,7 +465,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
                   <span>{tag}</span>
                   <button
                     className={styles.removeTagButton}
-                    onClick={() => handleRemoveTag(tag)}
+                    //onClick={() => handleRemoveTag(tag)}
                     title="태그 제거"
                   >
                     ×

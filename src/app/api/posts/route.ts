@@ -6,23 +6,30 @@ export async function GET(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL as string;
-  const base = `${supabaseUrl}/rest/v1/posts` 
+
+  const include_private = request.nextUrl.searchParams.get("is_public") ? request.nextUrl.searchParams.get("is_public") : null;
+  const category = request.nextUrl.searchParams.get("category") ? request.nextUrl.searchParams.get("category") : null;
+  const tags = request.nextUrl.searchParams.get("tag") ? request.nextUrl.searchParams.get("tag")! : null;
+
   
-  // 목록 조회 로직
-  const select = `?select=id,title,created_at,view_count,is_public,category` 
-  const p_params = request.nextUrl.searchParams.get("is_public") ? `&is_public=eq.${request.nextUrl.searchParams.get("is_public")}` : '';
-  const c_params = request.nextUrl.searchParams.get("category") ? `&category=eq.${request.nextUrl.searchParams.get("category")}` : '';
-  const order = `&order=created_at.desc`
+  console.log(include_private)
+  console.log(category)
+  console.log(tags)
 
   try {
-    const response = await fetch(
-      `${base}${select}${c_params}${p_params}${order}`, {
-        method: 'GET',
-        headers: {
-        'apikey': supabaseKey,
-        'Content-Type': 'application/json'
-      }
-    })
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_filtered_posts_with_relations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': `${supabaseKey}`
+      },
+      body: JSON.stringify({
+        input_category_id: category,                   // 선택적으로 넘김
+        input_tag_ids: tags,
+        include_private: include_private                // 공개 게시글만 볼 거면 false
+      })
+    });
+    console.log(response)
     if (response.ok) { 
       const data = await response.json();
       return NextResponse.json(data, {
