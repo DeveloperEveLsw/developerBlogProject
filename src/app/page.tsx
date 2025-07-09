@@ -40,7 +40,7 @@ export default async function Home() {
       center={
         <div>
           <LogoAnimation size={200}></LogoAnimation>
-          <Suspense>
+          <Suspense fallback={<div>로딩 중...</div>}>
             <PostListContainer></PostListContainer>
           </Suspense>
         </div>
