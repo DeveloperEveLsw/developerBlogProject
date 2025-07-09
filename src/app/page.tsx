@@ -33,6 +33,7 @@ export default async function Home() {
   const categories:{category_id:number, category_text:string}[] | [] = await getCategories();
 
   return (
+    <Suspense fallback={<div>로딩 중...</div>}>
       <ThreeColumnLayout
       left= {
         <Category categories={categories}></Category>
@@ -40,12 +41,12 @@ export default async function Home() {
       center={
         <div>
           <LogoAnimation size={200}></LogoAnimation>
-          <Suspense fallback={<div>로딩 중...</div>}>
+          
             <PostListContainer></PostListContainer>
-          </Suspense>
+          
         </div>
       }
       centerMaxWidth={600}
-    />
+    /></Suspense>
   );
 }
