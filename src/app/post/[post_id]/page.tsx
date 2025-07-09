@@ -9,7 +9,9 @@ export const dynamicParams = true // or false, to 404 on unknown paths
 
 export async function generateStaticParams() {
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
-  const response = await fetch(`${hostUrl}/api/posts`)
+  console.log(`${hostUrl}/api/posts`)
+  const response = await fetch(`${hostUrl}/api/posts`, {method: "GET"})
+  console.log(response)
   const data = await response.json()
   const params = data.map((post: SupabasePostsInterface) => ({
     post_id: post.id.toString()
