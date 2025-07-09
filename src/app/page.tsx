@@ -1,9 +1,9 @@
-import PostListContainer from "@/containers/PostListContainer/PostListContainer";
 import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout';
 import LogoAnimation from '@/components/LogoAnimation/LogoAnimation'
 import Category from '@/components/Category/Category'
 import styles from "./page.module.css"
 import { Suspense } from 'react'
+import Fuckingshibal from '@/components/fuckingshibal'
 
 // app/page.tsx 또는 app/layout.tsx
 export const metadata = {
@@ -33,7 +33,6 @@ export default async function Home() {
   const categories:{category_id:number, category_text:string}[] | [] = await getCategories();
 
   return (
-    <Suspense fallback={<div>로딩 중...</div>}>
       <ThreeColumnLayout
       left= {
         <Category categories={categories}></Category>
@@ -41,12 +40,12 @@ export default async function Home() {
       center={
         <div>
           <LogoAnimation size={200}></LogoAnimation>
-          
-            <PostListContainer></PostListContainer>
-          
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <Fuckingshibal></Fuckingshibal>
+          </Suspense>
         </div>
       }
       centerMaxWidth={600}
-    /></Suspense>
+    />
   );
 }
