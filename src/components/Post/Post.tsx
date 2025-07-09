@@ -1,12 +1,13 @@
+"use client"
+
 import React from 'react'
 import styles from './Post.module.css';
 import Link from 'next/link'
 
 import { PostInterface } from '@/types/types';
 
-const Post = (props: PostInterface & { isAdmin?:boolean }) => {
+const Post = (props: PostInterface) => {
     const date = new Date(props.created_at)
-    const {isAdmin = false} = props
     
     // category가 존재하고 비어있지 않은 경우에만 표시
     const shouldShowCategory = props.category && 

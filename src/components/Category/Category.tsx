@@ -24,7 +24,6 @@ export const Category = ({ categories }: {categories: Category[]}) => {
       console.log("삭제!")
       params.delete("category"); // 카테고리 제거
       router.push(`?${params.toString()}`);
-      router.refresh(); // 서버 컴포넌트 재실행
       return     
       } 
       else {
@@ -33,8 +32,7 @@ export const Category = ({ categories }: {categories: Category[]}) => {
 
         params.set("category", `${category.category_text}_${category.category_id}`);
       
-        router.push(`?${params.toString()}`); // URL 업데이트
-        router.refresh(); // 서버 컴포넌트 재실행!
+        router.push(`?${params.toString()}`);
 
     }
   }

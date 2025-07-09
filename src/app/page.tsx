@@ -27,10 +27,9 @@ async function getCategories() {
   return data
 }
 
-export default async function Home({ searchParams }: { searchParams :Promise<{ [key: string]: string | string[] | undefined }>}) {
+export default async function Home() {
 
   const categories:{category_id:number, category_text:string}[] | [] = await getCategories();
-  const resolvedParams = await searchParams
 
   return (
       <ThreeColumnLayout
@@ -40,7 +39,7 @@ export default async function Home({ searchParams }: { searchParams :Promise<{ [
       center={
         <div>
           <LogoAnimation size={200}></LogoAnimation>
-          <PostListContainer searchParams={resolvedParams}></PostListContainer>
+          <PostListContainer></PostListContainer>
         </div>
       }
       centerMaxWidth={600}
