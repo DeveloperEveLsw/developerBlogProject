@@ -3,6 +3,7 @@ import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout';
 import LogoAnimation from '@/components/LogoAnimation/LogoAnimation'
 import Category from '@/components/Category/Category'
 import styles from "./page.module.css"
+import { Suspense } from 'react'
 
 // app/page.tsx 또는 app/layout.tsx
 export const metadata = {
@@ -39,7 +40,9 @@ export default async function Home() {
       center={
         <div>
           <LogoAnimation size={200}></LogoAnimation>
-          <PostListContainer></PostListContainer>
+          <Suspense>
+            <PostListContainer></PostListContainer>
+          </Suspense>
         </div>
       }
       centerMaxWidth={600}
