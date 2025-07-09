@@ -25,17 +25,17 @@ export const remarkCustomDataBlock: Plugin = () => {
           let parse
           if (parse = safeParse(arrayParse, text)) {
             parent.children[index] = parse
-            console.log(parse)
+            //console.log(parse)
             return      
           }
           else if (parse = safeParse(nestedArrayParse, text)) {
             parent.children[index] = parse
-            console.log(parse)
+            //console.log(parse)
             return
           }
         }
 
-      } catch(e) { console.log(e) }
+      } catch(e) {  }
       })
     }
   }

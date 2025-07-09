@@ -44,7 +44,7 @@ const rehypeCustomDataBlock: Plugin = () => {
                 }
             ]
             };
-        console.log(htmlNode)
+        //console.log(htmlNode)
         try {
             if (node.style) {
                 node.style.forEach(({index, value})=> {
@@ -76,7 +76,7 @@ const rehypeCustomDataBlock: Plugin = () => {
             })
         )};
 
-        console.log(htmlNode)
+        //console.log(htmlNode)
         try {
             if (node.style) {
                 node.style.forEach(({index, value})=> {

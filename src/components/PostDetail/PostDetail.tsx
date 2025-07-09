@@ -20,7 +20,6 @@ const PostDetail = ( {post}: {post: PostInterface}) => {
   return (
     <div className={styles.postDetail}>
       <div className={styles.postDetailHeader}>
-        <title>{post.title}</title>
         <h1>{post.title}</h1>
         <div className={styles.meta}>
           <span>{post.created_at}</span>

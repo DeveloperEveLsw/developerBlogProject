@@ -17,6 +17,52 @@ export async function generateStaticParams() {
   return params
 }
 
+
+export async function generateMetadata({params}: {params: Promise<{post_id: string}>}) {
+  
+  const { post_id } = await params
+  
+  const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+
+  const alist = await fetch(`${hostUrl}/api/post?id=${post_id}`);
+    
+  if (alist.ok) {
+    const data = await alist.json();
+    const post = data[0]
+
+    return {
+      title: post.title,
+      description: post.description
+          ? post.description
+          : post.content.length > 100
+            ? post.content.substring(0, 100) + "..."
+            : post.content,
+      openGraph: {
+        title: post.title,
+        description: post.description
+          ? post.description
+          : post.content.length > 100
+            ? post.content.substring(0, 100) + "..."
+            : post.content,
+        url: `${hostUrl}/post/${post_id}`,
+        images: [
+          {
+            url: post.cover_image
+              ? `${supabaseUrl}/storage/v1/object/blog-image/post/${post.cover_image}`
+              : post.images
+                ? `${supabaseUrl}/storage/v1/object/blog-image/post/${post.images[0]}`
+                : '/LB.png',
+            alt: post.title,
+          },
+        ],
+      },
+    }
+  }
+}
+  
+
+
 const page = async ( {params}: {params: Promise<{post_id: string}>} ) => {
   const { post_id } = await params
   

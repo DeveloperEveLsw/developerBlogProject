@@ -16,8 +16,6 @@ const PostListContainer = async ({isAdmin=false, searchParams}:{isAdmin?:boolean
         params.append('category', category.split("_")[1] as string);
     }
 
-
-
     if (searchParams?.tag) {
         params.append('tag', searchParams.tag as string);
     }

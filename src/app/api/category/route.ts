@@ -85,52 +85,57 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const token = request.cookies.get("jwt_token")?.value
+    if (token) {
     // 중복 카테고리 확인
-    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}`, {
-      method: 'GET',
-      headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json'
-      }
-    });
+      const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}`, {
+        method: 'GET',
+        headers: {
+          'apikey': supabaseServiceKey,
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
+        }
+      });
 
-    if (checkResponse.ok) {
-      const existingCategories = await checkResponse.json();
-      if (existingCategories.length > 0) {
+      if (checkResponse.ok) {
+        const existingCategories = await checkResponse.json();
+        if (existingCategories.length > 0) {
+          return NextResponse.json(
+            { error: '이미 존재하는 카테고리 이름입니다.' },
+            { status: 409 }
+          );
+        }
+      }
+
+      // 새 카테고리 추가
+      const response = await fetch(`${supabaseUrl}/rest/v1/category`, {
+        method: 'POST',
+        headers: {
+          'apikey': supabaseServiceKey,
+          "Authorization": `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          category_text: category_text.trim()
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Supabase category creation failed:', response.status, response.statusText);
         return NextResponse.json(
-          { error: '이미 존재하는 카테고리 이름입니다.' },
-          { status: 409 }
+          { error: '카테고리 생성 중 오류가 발생했습니다.' },
+          { status: response.status }
         );
       }
-    }
 
-    // 새 카테고리 추가
-    const response = await fetch(`${supabaseUrl}/rest/v1/category`, {
-      method: 'POST',
-      headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      },
-      body: JSON.stringify({
-        category_text: category_text.trim()
-      })
-    });
-
-    if (!response.ok) {
-      console.error('Supabase category creation failed:', response.status, response.statusText);
-      return NextResponse.json(
-        { error: '카테고리 생성 중 오류가 발생했습니다.' },
-        { status: response.status }
-      );
-    }
-
-    const newCategory = await response.json();
-    console.log(newCategory)
-    return NextResponse.json(newCategory[0], {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' }
-    });
+      const newCategory = await response.json();
+      //console.log(newCategory)
+      return NextResponse.json(newCategory[0], {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } else { return NextResponse.json({error: "토큰이 없습니다"}, {status: 401}) }
 
   } catch (error) {
     console.error('Category POST error:', error);
@@ -177,76 +182,83 @@ export async function PATCH(request: NextRequest) {
     }
 
     // 카테고리 존재 확인
-    const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
-      method: 'GET',
-      headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json'
-      }
-    });
 
-    if (!checkResponse.ok) {
-      return NextResponse.json(
-        { error: '카테고리 확인 중 오류가 발생했습니다.' },
-        { status: checkResponse.status }
-      );
-    }
+    const token = request.cookies.get("jwt_token")?.value
+    if (token) {
 
-    const existingCategory = await checkResponse.json();
-    if (existingCategory.length === 0) {
-      return NextResponse.json(
-        { error: '존재하지 않는 카테고리입니다.' },
-        { status: 404 }
-      );
-    }
+      const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
+        method: 'GET',
+        headers: {
+          'apikey': supabaseServiceKey,
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
+        }
+      });
 
-    // 중복 이름 확인 (자기 자신 제외)
-    const duplicateResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}&category_id=neq.${category_id}`, {
-      method: 'GET',
-      headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (duplicateResponse.ok) {
-      const duplicateCategories = await duplicateResponse.json();
-      if (duplicateCategories.length > 0) {
+      if (!checkResponse.ok) {
         return NextResponse.json(
-          { error: '이미 존재하는 카테고리 이름입니다.' },
-          { status: 409 }
+          { error: '카테고리 확인 중 오류가 발생했습니다.' },
+          { status: checkResponse.status }
         );
       }
-    }
 
-    // 카테고리 이름 업데이트
-    const response = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      },
-      body: JSON.stringify({
-        category_text: category_text.trim()
-      })
-    });
+      const existingCategory = await checkResponse.json();
+      if (existingCategory.length === 0) {
+        return NextResponse.json(
+          { error: '존재하지 않는 카테고리입니다.' },
+          { status: 404 }
+        );
+      }
 
-    if (!response.ok) {
-      console.error('Supabase category update failed:', response.status, response.statusText);
-      return NextResponse.json(
-        { error: '카테고리 수정 중 오류가 발생했습니다.' },
-        { status: response.status }
-      );
-    }
+      // 중복 이름 확인 (자기 자신 제외)
+      const duplicateResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}&category_id=neq.${category_id}`, {
+        method: 'GET',
+        headers: {
+          'apikey': supabaseServiceKey,
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
+        }
+      });
 
-    const updatedCategory = await response.json();
-    
-    return NextResponse.json(updatedCategory[0], {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+      if (duplicateResponse.ok) {
+        const duplicateCategories = await duplicateResponse.json();
+        if (duplicateCategories.length > 0) {
+          return NextResponse.json(
+            { error: '이미 존재하는 카테고리 이름입니다.' },
+            { status: 409 }
+          );
+        }
+      }
 
+      // 카테고리 이름 업데이트
+      const response = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseServiceKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          category_text: category_text.trim()
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Supabase category update failed:', response.status, response.statusText);
+        return NextResponse.json(
+          { error: '카테고리 수정 중 오류가 발생했습니다.' },
+          { status: response.status }
+        );
+      }
+
+      const updatedCategory = await response.json();
+      
+      return NextResponse.json(updatedCategory[0], {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } else { return NextResponse.json({error: "토큰이 없습니다"}, {status: 401}) }
   } catch (error) {
     console.error('Category PATCH error:', error);
     return NextResponse.json(

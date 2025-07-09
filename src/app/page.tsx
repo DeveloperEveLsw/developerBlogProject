@@ -7,11 +7,11 @@ import styles from "./page.module.css"
 // app/page.tsx 또는 app/layout.tsx
 export const metadata = {
   title: 'LSW 개발 블로그',
-  description: '즐기면서 성장하는 개발 블로그',
+  description: '즐기면서 성장하는 개발 블로그 입니다. 성장과정과 사고 과정을 기록하고 있습니다. 문제가 발생하였을때 해결하는것을 좋아하며 그러한 과정을 출력으로써 남기기위해 블로그를 운영합니다',
   openGraph: {
     title: 'LSW 개발 블로그',
     description: '즐기면서 성장하는 개발 블로그',
-    images: ['/og-image.png'],
+    images: ['/LB.png'],
   },
 };
 
@@ -24,7 +24,6 @@ async function getCategories() {
     throw new Error('Failed to fetch categories');
   }
   const data = await res.json();
-  console.log(data)
   return data
 }
 

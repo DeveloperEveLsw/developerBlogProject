@@ -233,63 +233,48 @@ const AdminPage = () => {
     }
 
     const handleDeletePost = async (postId: string) => {
-    if (confirm('정말로 이 포스트를 삭제하시겠습니까?')) {
+        if (confirm('정말로 이 포스트를 삭제하시겠습니까?')) {
+            try {
+            const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            })
+            
+            if (response.ok) {
+                await fetchPosts() // 목록 새로고침
+            } else {
+                alert('삭제에 실패했습니다.')
+            }
+            } catch (error) {
+            alert('삭제 중 오류가 발생했습니다.')
+            }
+        }
+        }
+
+        const handleTogglePublic = async (postId: string, currentStatus: boolean) => {
         try {
-        const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
-            method: 'DELETE',
+            const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
+            method: 'PATCH',
             headers: {
-            'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
+            body: JSON.stringify({ 
+                is_public: !currentStatus 
+            }),
             credentials: 'include'
-        })
-        
-        if (response.ok) {
+            })
+            
+            if (response.ok) {
             await fetchPosts() // 목록 새로고침
-        } else {
-            alert('삭제에 실패했습니다.')
-        }
+            } else {
+            alert('상태 변경에 실패했습니다.')
+            }
         } catch (error) {
-        alert('삭제 중 오류가 발생했습니다.')
+            alert('상태 변경 중 오류가 발생했습니다.')
         }
-    }
-    }
-
-    const handleTogglePublic = async (postId: string, currentStatus: boolean) => {
-    try {
-        const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 
-            is_public: !currentStatus 
-        }),
-        credentials: 'include'
-        })
-        
-        if (response.ok) {
-        await fetchPosts() // 목록 새로고침
-        } else {
-        alert('상태 변경에 실패했습니다.')
-        }
-    } catch (error) {
-        alert('상태 변경 중 오류가 발생했습니다.')
-    }
-    }
-
-    // 카테고리 추가
-    const handleAddCategory = () => {
-    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
-        setCategories(prev => [...prev, newCategory.trim()])
-        setNewCategory("")
-    }
-    }
-
-    // 카테고리 삭제
-    const handleDeleteCategory = (categoryToDelete: string) => {
-    if (confirm(`카테고리 "${categoryToDelete}"를 삭제하시겠습니까?`)) {
-        setCategories(prev => prev.filter(cat => cat !== categoryToDelete))
-    }
     }
 
     // 태그 추가
@@ -309,27 +294,27 @@ const AdminPage = () => {
 
     // Supabase 카테고리 추가
     const handleAddCategoryToDB = async () => {
-    if (!newCategory.trim()) return
-    
-    try {
-        const response = await fetch(`${hostUrl}/api/category`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: newCategory.trim() }),
-        credentials: 'include'
-        })
+        if (!newCategory.trim()) return
         
-        if (response.ok) {
-        setNewCategory("")
-        await fetchCategories() // 목록 새로고침
-        } else {
-        alert('카테고리 추가에 실패했습니다.')
+        try {
+            const response = await fetch(`${hostUrl}/api/category`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ category_text: newCategory.trim() }),
+            credentials: 'include'
+            })
+            
+            if (response.ok) {
+                setNewCategory("")
+                await fetchCategories() // 목록 새로고침
+            } else {
+                alert('카테고리 추가에 실패했습니다.')
+            }
+        } catch (error) {
+            alert('카테고리 추가 중 오류가 발생했습니다.')
         }
-    } catch (error) {
-        alert('카테고리 추가 중 오류가 발생했습니다.')
-    }
     }
 
     // Supabase 카테고리 삭제
@@ -529,7 +514,7 @@ const AdminPage = () => {
                     />
                     <button
                     className={styles.addItemButton}
-                    //onClick={() => handleAddCategoryToDB()}
+                    onClick={() => handleAddCategoryToDB()}
                     disabled={!newCategory.trim()}
                     >
                     추가

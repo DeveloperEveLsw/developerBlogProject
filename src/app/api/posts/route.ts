@@ -11,10 +11,7 @@ export async function GET(request: NextRequest) {
   const category = request.nextUrl.searchParams.get("category") ? request.nextUrl.searchParams.get("category") : null;
   const tags = request.nextUrl.searchParams.get("tag") ? request.nextUrl.searchParams.get("tag")! : null;
 
-  
-  console.log(include_private)
-  console.log(category)
-  console.log(tags)
+
 
   try {
     const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_filtered_posts_with_relations`, {
@@ -29,7 +26,7 @@ export async function GET(request: NextRequest) {
         include_private: include_private                // 공개 게시글만 볼 거면 false
       })
     });
-    console.log(response)
+    //console.log(response)
     if (response.ok) { 
       const data = await response.json();
       return NextResponse.json(data, {
