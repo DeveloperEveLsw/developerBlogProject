@@ -7,20 +7,21 @@ import { PostInterface } from '@/types/types';
 import { SupabasePostsInterface } from '@/types/db';
 import { useState, useEffect } from 'react';
 
-const PostListContainer = () => {
+const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
     const hostUrl = process.env.NEXT_PUBLIC_HOST_URL 
     
     
-    const [posts, setPosts] = useState([])
-    
+    const [posts, setPosts] = useState<PostInterface[] >(initialPosts)
 
-    const newParams = new URLSearchParams();
     const params = useSearchParams()
-
-    newParams.append('private', 'false');
+    
+    const category = params.get("category")
+    const tags =  params.get("tag")
 
     useEffect(()=> {
         const fetchData = async () => {
+            const newParams = new URLSearchParams();
+            newParams.append('private', 'false');
             if (params.get("category")) {
                 let category = params.get("category") as string
                 newParams.append('category', category.split("_")[1] as string);
@@ -51,7 +52,7 @@ const PostListContainer = () => {
             }
         }
         fetchData()
-    }, [params.toString()])
+    }, [category, tags])
     
     return (
         <div style={{width: '100%'}}>

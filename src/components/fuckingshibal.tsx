@@ -2,10 +2,11 @@
 
 import React from 'react'
 import PostListContainer from '@/containers/PostListContainer/PostListContainer'
+import { PostInterface } from '@/types/types';
 
-const Fuckingshibal = () => {
+const Fuckingshibal = ({initialPosts}: {initialPosts: PostInterface[]}) => {
   return (
-    <PostListContainer />
+    <PostListContainer initialPosts={initialPosts} />
   )
 }
 
