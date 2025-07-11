@@ -7,31 +7,34 @@ import { PostInterface } from '@/types/types';
 import { SupabasePostsInterface } from '@/types/db';
 import { useState, useEffect } from 'react';
 
+import {usePostStore} from '@/store/postStore'
+
 const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
     const hostUrl = process.env.NEXT_PUBLIC_HOST_URL 
     
-    
-    const [posts, setPosts] = useState<PostInterface[] >(initialPosts)
+    const {posts, setPosts} = usePostStore()
 
     const params = useSearchParams()
-    
+
     const category = params.get("category")
     const tags =  params.get("tag")
 
     useEffect(()=> {
         const fetchData = async () => {
             const newParams = new URLSearchParams();
-            newParams.append('private', 'false');
-            if (params.get("category")) {
-                let category = params.get("category") as string
-                newParams.append('category', category.split("_")[1] as string);
+            
+            if (category) {
+                newParams.append('category', category.split("_").length > 1 ? category.split("_")[1] : category.split("_")[0]);
             }
         
-            if (params.get("tag")) {
-                newParams.append('tag', params.get("tag") as string);
+            if (tags) {
+                newParams.append('tag', tags as string);
             }
-        
+            if (newParams.toString() == '') { setPosts(initialPosts) }
+
             try {
+                newParams.append('private', 'false')
+                
                 const response = await fetch(`${hostUrl}/api/posts?${newParams.toString()}`);
                 
                 if (response.ok) {

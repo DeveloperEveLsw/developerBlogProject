@@ -8,10 +8,10 @@ import rehypeRaw from 'rehype-raw'
 import remarkBreaks from 'remark-breaks'
 import remarkCustomDataBlock from './customDataBlock/customDataBlock'
 import rehypeCustomDataBlock from './customDataBlock/rehypeCustomDataBlock'
-// types.d.ts 또는 프로젝트의 타입 정의 파일에 추가
-import type { Literal } from 'unist';
-import type { ElementContent } from 'hast';
-import type { Properties } from 'hast';
+
+import { Plugin } from 'unified';
+import { visit } from 'unist-util-visit';
+
 
 declare module 'mdast' {
   interface arrayBlock {
@@ -40,6 +40,29 @@ declare module 'mdast' {
   }
 }
 
+const rehypeMermaid: Plugin = () => {
+  return (tree) => {
+    visit(tree, 'element', (node:any, index:number, parent) => {
+      if (
+        node.tagName === 'code' &&
+        node.properties?.className?.includes('language-mermaid') &&
+        parent?.tagName === 'pre'
+      ) {
+        const mermaidCode = node.children?.[0]?.value || '';
+        parent.children[index] = {
+          type: 'text',
+          value: '', // 기존 <code> 제거
+        };
+        parent.tagName = 'pre';
+        parent.properties = { className: ['mermaid'] };
+        parent.children = [{ type: 'text', value: mermaidCode }];
+      }
+    });
+  };
+};
+
+
+
 const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
     const highlighter = await getHighlighter();
 
@@ -56,6 +79,7 @@ const markdownHtmlStringify = async ({markdown}: {markdown: string}) => {
         )
         .use(rehypeCustomDataBlock)
         .use(rehypeRaw)
+        .use(rehypeMermaid)
         .use(rehypeShiki, {
           highlighter,
           themes: {

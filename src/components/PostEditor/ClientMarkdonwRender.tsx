@@ -4,6 +4,7 @@ import React from 'react'
 import styles from '@/components/MarkdownRender/MarkDownRender.module.css'
 import markdownHtmlStringify from '@/utils/markdownHtmlStringify'
 import { useEffect, useState } from 'react'
+import MermaidRenderer from '@/components/MarkdownRender/MermaidRenderer'
 
 const ClientMarkdownRender = ({markdown}: {markdown: string}) => {
     
@@ -18,9 +19,16 @@ const ClientMarkdownRender = ({markdown}: {markdown: string}) => {
     }, [markdown]);
 
     return (
-        <div dangerouslySetInnerHTML={{ __html: file }}
-        className={styles.markdownContent} />
+        <div>
+            <div dangerouslySetInnerHTML={{ __html: file }}
+            className={styles.markdownContent} />
+            <MermaidRenderer file={file}/>
+        </div>
     )
 }
+
+
+
+
 
 export default ClientMarkdownRender

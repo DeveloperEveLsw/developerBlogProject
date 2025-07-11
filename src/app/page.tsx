@@ -3,7 +3,7 @@ export const dynamic = "force-static";
 import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout';
 import LogoAnimation from '@/components/LogoAnimation/LogoAnimation'
 import Category from '@/components/Category/Category'
-import Fuckingshibal from '@/components/fuckingshibal'
+import SafeClientSuspense from '@/containers/PostListContainer/SafeClientSuspense'
 
 import { Suspense } from 'react'
 
@@ -60,7 +60,7 @@ export default async function Home() {
         <div>
           <LogoAnimation size={200}></LogoAnimation>
           <Suspense fallback={<div>로딩 중...</div>}>
-            <Fuckingshibal initialPosts={initialPostsData}></Fuckingshibal>
+            <SafeClientSuspense initialPosts={initialPostsData}></SafeClientSuspense>
           </Suspense>
         </div>
       }
