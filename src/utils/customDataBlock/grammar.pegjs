@@ -32,6 +32,7 @@
         return Array.from({ length: end - start + 1 }, (_, i) => start + i);
       }
     / n:Integer { return [n]; }
+    
   styleProperty
     = _ name:propertyName _ ":" _ value:propertyValue _ ";" _ {
         return name+": "+value+";";

@@ -34,7 +34,15 @@
   margin-left: auto;
 }
 
+.postDetail a:link,.postDetail a:hover,.postDetail a:active {
+  color: rgb(0, 145, 255);
+  text-decoration: underline;
+}
 
+.postDetail a:visited {
+  color: rgb(189, 83, 255);
+  text-decoration: underline;  
+}
 
 @media (max-width: 767px) {
   .postDetail {

@@ -30,13 +30,18 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
             if (tags) {
                 newParams.append('tag', tags as string);
             }
-            if (newParams.toString() == '') { setPosts(initialPosts) }
+            if (!(tags || category)) { setPosts(initialPosts); return}
 
             try {
                 newParams.append('private', 'false')
                 
-                const response = await fetch(`${hostUrl}/api/posts?${newParams.toString()}`);
+                setPosts(initialPosts.filter((post)=> post.category == category?.split("_")[0]))
                 
+
+                /*         당장은 게시글 목록이 많지 않고 페이징 방식을 쓰지않기 때문에 단순 filter 체이닝으로 구현
+                const response = await fetch(`${hostUrl}/api/posts?${newParams.toString()}`);
+
+
                 if (response.ok) {
                     const data = await response.json();
                     setPosts(data.map((post: SupabasePostsInterface) => ({
@@ -50,6 +55,8 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
                 } else {
                     console.error('포스트 목록 가져오기 실패:', response.status, response.statusText);
                 }
+                */
+                
             } catch (error) {
                 console.error('포스트 목록 가져오기 중 오류:', error);
             }
