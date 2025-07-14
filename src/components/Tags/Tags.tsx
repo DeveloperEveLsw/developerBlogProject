@@ -22,7 +22,7 @@ const Tags = ({tags} : {tags:Tag[]}) => {
         if (!tagsFarams) {
           setSelectedTag(null)
         } else { setSelectedTags(tagsFarams.split(",").map((tag:string)=> { const parma= tag.split("_");return { tag_id:Number(parma[1]),tag_text:parma[0] }} )) }
-      }, []);
+      }, [tagsFarams]);
     
     useEffect(()=> {
       const params = new URLSearchParams(searchParams.toString());
