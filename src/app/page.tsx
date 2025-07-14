@@ -4,11 +4,11 @@ import ThreeColumnLayout from '@/components/layout/ThreeColumnLayout';
 import LogoAnimation from '@/components/LogoAnimation/LogoAnimation'
 import Category from '@/components/Category/Category'
 import SafeClientSuspense from '@/containers/PostListContainer/SafeClientSuspense'
-
 import { Suspense } from 'react'
 
 import { PostInterface } from '@/types/types';
 import { SupabasePostsInterface } from '@/types/db';
+import Tags from '@/components/Tags/Tags';
 
 export const metadata = {
   title: 'LSW 개발 블로그',
@@ -19,6 +19,20 @@ export const metadata = {
     images: ['/LB.png'],
   },
 };
+
+interface Tag {
+  tag_id: number
+  tag_text: string
+}
+
+function getTag():Tag[] {
+  return [
+    { tag_id:1, tag_text:"개발과정" },
+    { tag_id:2, tag_text:"python" },
+    { tag_id:3, tag_text:"NEXTjs" },
+    { tag_id:4, tag_text:"JAVA" }
+  ]
+}
 
 export default async function Home() {
 
@@ -60,6 +74,7 @@ export default async function Home() {
         <div>
           <LogoAnimation size={200}></LogoAnimation>
           <Suspense fallback={<div>로딩 중...</div>}>
+            <Tags tags={getTag()}></Tags>
             <SafeClientSuspense initialPosts={initialPostsData}></SafeClientSuspense>
           </Suspense>
         </div>
