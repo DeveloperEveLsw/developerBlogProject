@@ -37,7 +37,7 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
                 const newPosts = initialPosts.filter( (post:PostInterface)=>
                     (category ? post.category == category.split("_")[0] : true)
                     &&
-                    (tags ? tags.split(",").map((tag:any)=>tag.tag_text).every(tag=>post.tags) : true) )
+                    (tags ? tags.split(",").map((tag:string)=>tag.split("_")[0]).every(tag=>post.tags?.includes(tag)) : true) )
                 setPosts(newPosts)
                 /* 당장엔 게시글 목록에 페이징을 하지 않았기에 이렇게 사용해보도록 하겠습니다 !
                 newParams.append('private', 'false')
