@@ -1,30 +1,31 @@
 .categoryContainer {
   margin-top: 350px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 20px 0;
-  justify-content: center;
+  flex-direction: column; /* 한 줄에 하나씩 */
+  align-items: flex-end; /* 왼쪽 정렬 */
+  padding: 20px;
+  gap: 12px; /* 버튼 간 간격 */
 }
 
 .categoryItem {
-  background-color: #f0f0f0; /* 밝은 회색 배경 */
-  color: #333; /* 어두운 텍스트 색상 */
-  padding: 8px 15px;
-  border-radius: 20px; /* 둥근 모서리 */
-  text-decoration: none;
-  font-size: 0.9em;
+  background: none; /* 박스 없애기 */
+  border: none;
+  padding: 5px 0;
+  font-size: 0.95em;
   font-weight: 500;
-  transition: all 0.3s ease;
-  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-  border: 1px solid #e0e0e0;
-}
-
-.categoryItem_active {
-    background-color: #ddfdff;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
 }
 
 .categoryItem:hover {
-  background-color: #e0e0e0; /* 호버 시 약간 어두워짐 */ /* 살짝 위로 뜨는 효과 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transform: translateX(-4px); /* hover 시 살짝 왼쪽으로 */
+  color: #0070f3; /* 예시: hover 시 색 변경 */
+}
+
+.categoryItem_active {
+  transform: translateX(-4px); /* 선택 시 더 왼쪽으로 이동 */
+  font-weight: 600;
+  color: #0070f3;
 }

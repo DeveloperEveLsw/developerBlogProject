@@ -9,6 +9,8 @@ interface SelectedTagsState {
   selectedTags: Tag[]
   setSelectedTag: (tag: Tag | null) => void
   toggleSelectedTag: (tag: Tag) => void
+  getTagsParams: ()=> string
+  setSelectedTags: (tags:Tag[]) => void
 }
 
 export const SelectedTagsStore = create<SelectedTagsState>((set, get) => ({
@@ -30,4 +32,6 @@ export const SelectedTagsStore = create<SelectedTagsState>((set, get) => ({
       set({ selectedTags: [...get().selectedTags, tag] })
     }
   },
+  getTagsParams: () => get().selectedTags.map(tag=>`${tag.tag_text}_${tag.tag_id}`).join(","),
+  setSelectedTags: (tags:Tag[])=> set({selectedTags:tags})
 }))
