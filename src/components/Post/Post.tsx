@@ -13,7 +13,7 @@ const Post = (props: PostInterface) => {
     // category가 존재하고 비어있지 않은 경우에만 표시
     const shouldShowCategory = props.category && 
         (typeof props.category === 'string' ? props.category.trim() !== '' : props.category !== null && props.category !== undefined);
-    console.log(props.tags)
+
   return (
     <div className={styles.postBox}>
         <Link href={`/post/${props.id}`}>

@@ -19,7 +19,6 @@ const Tags = ({tags} : {tags:Tag[]}) => {
     const {selectedTags, setSelectedTag, toggleSelectedTag, getTagsParams, setSelectedTags} = SelectedTagsStore() 
   
     useEffect(() => {
-      console.log(tagsFarams)
         if (!tagsFarams) {
           setSelectedTag(null)
         } else { setSelectedTags(tagsFarams.split(",").map((tag:string)=> { const parma= tag.split("_");return { tag_id:Number(parma[1]),tag_text:parma[0] }} )) }

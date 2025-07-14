@@ -24,7 +24,7 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
             const newParams = new URLSearchParams();
             
             if (category) {
-                newParams.append('category', category.split("_").length > 1 ? category.split("_")[1] : category.split("_")[0]);
+                newParams.append('category', category.split("_")[1]);
             }
         
             if (tags) {
@@ -34,6 +34,12 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
             if (newParams.toString() == '') { setPosts(initialPosts) }
 
             try {
+                const newPosts = initialPosts.filter( (post:PostInterface)=>
+                    (category ? post.category == category.split("_")[0] : true)
+                    &&
+                    (tags ? tags.split(",").map((tag:any)=>tag.tag_text).every(tag=>post.tags) : true) )
+                setPosts(newPosts)
+                /* 당장엔 게시글 목록에 페이징을 하지 않았기에 이렇게 사용해보도록 하겠습니다 !
                 newParams.append('private', 'false')
                 
                 const response = await fetch(`${hostUrl}/api/posts?${newParams.toString()}`);
@@ -51,6 +57,7 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
                 } else {
                     console.error('포스트 목록 가져오기 실패:', response.status, response.statusText);
                 }
+                */
             } catch (error) {
                 console.error('포스트 목록 가져오기 중 오류:', error);
             }
