@@ -47,6 +47,8 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL;
 
   const [categories, setCategories] = useState<{ value: string; label: string }[]>([{ value: "", label: "카테고리 선택" }]);
+  const [tagOptions, setTagOptions] = useState<{ value: number; label: string }[]>([{ value: -1, label: '태그 선택' }]);
+  const [selectedTag, setSelectedTag] = useState<number>(-1);
 
   // 카테고리 로드
   useEffect(() => {
@@ -69,6 +71,28 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
     };
 
     fetchCategories();
+  }, [hostUrl]);
+
+  // 태그 목록 불러오기
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch(`${hostUrl}/api/tag`);
+        if (response.ok) {
+          const data = await response.json();
+          const fetchedTags = data.map((tag: { tag_id: number, tag_text: string }) => ({
+            value: tag.tag_id,
+            label: tag.tag_text,
+          }));
+          setTagOptions([{ value: -1, label: '태그 선택' }, ...fetchedTags]);
+        } else {
+          console.error('Failed to fetch tags');
+        }
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+    fetchTags();
   }, [hostUrl]);
 
   // Edit 모드일 때 기존 데이터 로드
@@ -100,7 +124,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
             content: post.content || "",
             category: post.category || null,
             tag: post.tags || null,
-            is_public: post.is_public || false
+            is_public: post.is_public === null || post.is_public === undefined ? false : post.is_public
           });
           console.log('PostData 설정 완료');
         } else {
@@ -139,28 +163,26 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
   };
 
   // 태그 추가
-  /*
   const handleAddTag = () => {
-    if (newTag.trim()) {
-      const currentTags = postData.tag || [];
-      if (!currentTags.includes(newTag.trim())) {
-        setPostData(prev => ({ 
-          ...prev, 
-          tag: [...(prev.tag || []), newTag.trim()] 
-        }));
-        setNewTag("");
-      }
-    }
+    if (selectedTag === -1) return;
+    const tagObj = tagOptions.find(tag => tag.value === selectedTag);
+    if (!tagObj) return;
+    // 이미 추가된 태그는 중복 추가 불가
+    if (postData.tag && postData.tag.includes(selectedTag)) return;
+    setPostData(prev => ({
+      ...prev,
+      tag: prev.tag ? [...prev.tag, selectedTag] : [selectedTag],
+    }));
+    setSelectedTag(-1);
   };
-
   // 태그 제거
-  const handleRemoveTag = (tagToRemove: string) => {
-    setPostData(prev => ({ 
-      ...prev, 
-      tag: prev.tag ? prev.tag.filter(tag => tag !== tagToRemove) : null
+  const handleRemoveTag = (tagId: number) => {
+    setPostData(prev => ({
+      ...prev,
+      tag: prev.tag ? prev.tag.filter(id => id !== tagId) : null,
     }));
   };
-  */
+
   // 이미지 제거 함수 추가
   const handleRemoveImage = async (imageUrl: string) => {
     try {
@@ -198,7 +220,7 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
   const handleTagKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      //handleAddTag();
+      handleAddTag();
     }
   };
 
@@ -442,36 +464,66 @@ const PostEditor = ({ mode, postId, initialData }: PostEditorProps) => {
         <div className={styles.inputGroup}>
           <label className={styles.label}>태그</label>
           <div className={styles.tagInputGroup}>
-            <input
-              type="text"
-              className={styles.tagInput}
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyDown={handleTagKeyPress}
-              placeholder="태그를 입력하고 Enter 또는 추가 버튼을 클릭하세요"
-            />
+            <select
+              className={styles.categorySelect}
+              value={selectedTag}
+              onChange={e => setSelectedTag(Number(e.target.value))}
+            >
+              {tagOptions.map(tag => (
+                <option key={tag.value} value={tag.value}>
+                  {tag.label}
+                </option>
+              ))}
+            </select>
             <button
               className={styles.addTagButton}
-              //onClick={handleAddTag}
-              disabled={!newTag.trim()}
+              onClick={handleAddTag}
+              disabled={!!(selectedTag === -1 || (postData.tag && postData.tag.includes(selectedTag)))}
+              type="button"
             >
               추가
             </button>
           </div>
-          {postData.tag && postData.tag.length > 0 && (
-            <div className={styles.tagsContainer}>
-              {postData.tag.map((tag, index) => (
-                <div key={index} className={styles.tagItem}>
-                  <span>{tag}</span>
-                  <button
-                    className={styles.removeTagButton}
-                    //onClick={() => handleRemoveTag(tag)}
-                    title="태그 제거"
+          {Array.isArray(postData.tag) && postData.tag.length > 0 && (
+            <div className={styles.tagsContainer} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+              {postData.tag.map((tagId, index) => {
+                const tagObj = tagOptions.find(tag => tag.value === tagId);
+                return (
+                  <div
+                    key={tagId}
+                    className={styles.tagItem}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      border: '1px solid #ccc',
+                      borderRadius: '16px',
+                      padding: '4px 12px',
+                      background: '#f5f5f5',
+                      fontSize: '14px',
+                    }}
                   >
-                    ×
-                  </button>
-                </div>
-              ))}
+                    <span>{tagObj ? tagObj.label : tagId}</span>
+                    <button
+                      className={styles.removeTagButton}
+                      onClick={() => handleRemoveTag(tagId)}
+                      title="태그 제거"
+                      style={{
+                        marginLeft: '6px',
+                        background: 'none',
+                        border: 'none',
+                        color: '#888',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        lineHeight: 1,
+                      }}
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

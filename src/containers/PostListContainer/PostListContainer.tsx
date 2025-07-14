@@ -17,22 +17,29 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
     const params = useSearchParams()
 
     const category = params.get("category")
-    const tags =  params.get("tag")
+    const tags =  params.get("tags")
 
     useEffect(()=> {
         const fetchData = async () => {
             const newParams = new URLSearchParams();
             
             if (category) {
-                newParams.append('category', category.split("_").length > 1 ? category.split("_")[1] : category.split("_")[0]);
+                newParams.append('category', category.split("_")[1]);
             }
         
             if (tags) {
-                newParams.append('tag', tags as string);
+                newParams.append('tags', tags.split(",").map(tag=>tag.split("_")[1]).join(","));
             }
+
             if (!(tags || category)) { setPosts(initialPosts); return}
 
             try {
+                const newPosts = initialPosts.filter( (post:PostInterface)=>
+                    (category ? post.category == category.split("_")[0] : true)
+                    &&
+                    (tags ? tags.split(",").map((tag:string)=>tag.split("_")[0]).every(tag=>post.tags?.includes(tag)) : true) )
+                setPosts(newPosts)
+                /* 당장엔 게시글 목록에 페이징을 하지 않았기에 이렇게 사용해보도록 하겠습니다 !
                 newParams.append('private', 'false')
                 
                 setPosts(initialPosts.filter((post)=> post.category == category?.split("_")[0]))
@@ -56,7 +63,6 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
                     console.error('포스트 목록 가져오기 실패:', response.status, response.statusText);
                 }
                 */
-                
             } catch (error) {
                 console.error('포스트 목록 가져오기 중 오류:', error);
             }

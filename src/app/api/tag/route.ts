@@ -3,16 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 // 환경 변수 확인
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
 // 환경 변수 검증
-if (!supabaseUrl || !supabaseServiceKey) {
+if (!supabaseUrl || !supabaseServiceKey || !supabaseKey) {
   console.error('Missing required environment variables for tag API');
 }
 
 // GET: 태그 목록 조회
 export async function GET(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
     const response = await fetch(`${supabaseUrl}/rest/v1/tag${params}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -60,11 +61,20 @@ export async function GET(request: NextRequest) {
 // POST: 새 태그 추가
 export async function POST(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
       );
+    }
+
+    const token = request.cookies.get("jwt_token")?.value;
+        
+    if (!token) {
+        return NextResponse.json(
+            { error: "인증이 필요합니다" },
+            { status: 401 }
+        );
     }
 
     const body = await request.json();
@@ -89,7 +99,7 @@ export async function POST(request: NextRequest) {
     const checkResponse = await fetch(`${supabaseUrl}/rest/v1/tag?tag_text=eq.${encodeURIComponent(tag_text.trim())}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -108,9 +118,10 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`${supabaseUrl}/rest/v1/tag`, {
       method: 'POST',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
+        'Prefer': 'return=representation',
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         tag_text: tag_text.trim()
@@ -144,11 +155,21 @@ export async function POST(request: NextRequest) {
 // PATCH: 태그 이름 수정
 export async function PATCH(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
       );
+    }
+
+
+    const token = request.cookies.get("jwt_token")?.value;
+        
+    if (!token) {
+        return NextResponse.json(
+            { error: "인증이 필요합니다" },
+            { status: 401 }
+        );
     }
 
     const body = await request.json();
@@ -180,7 +201,7 @@ export async function PATCH(request: NextRequest) {
     const checkResponse = await fetch(`${supabaseUrl}/rest/v1/tag?tag_id=eq.${tag_id}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -204,7 +225,7 @@ export async function PATCH(request: NextRequest) {
     const duplicateResponse = await fetch(`${supabaseUrl}/rest/v1/tag?tag_text=eq.${encodeURIComponent(tag_text.trim())}&tag_id=neq.${tag_id}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -223,9 +244,10 @@ export async function PATCH(request: NextRequest) {
     const response = await fetch(`${supabaseUrl}/rest/v1/tag?tag_id=eq.${tag_id}`, {
       method: 'PATCH',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
+        'Prefer': 'return=representation',
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         tag_text: tag_text.trim()
@@ -259,12 +281,22 @@ export async function PATCH(request: NextRequest) {
 // DELETE: 태그 삭제
 export async function DELETE(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
       );
     }
+
+    const token = request.cookies.get("jwt_token")?.value;
+        
+    if (!token) {
+        return NextResponse.json(
+            { error: "인증이 필요합니다" },
+            { status: 401 }
+        );
+    }
+
 
     const body = await request.json();
     const { tag_id } = body;
@@ -281,7 +313,7 @@ export async function DELETE(request: NextRequest) {
     const checkResponse = await fetch(`${supabaseUrl}/rest/v1/tag?tag_id=eq.${tag_id}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -305,7 +337,7 @@ export async function DELETE(request: NextRequest) {
     const postsResponse = await fetch(`${supabaseUrl}/rest/v1/posts?tags=cs.{${existingTag[0].tag_text}}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -324,8 +356,9 @@ export async function DELETE(request: NextRequest) {
     const response = await fetch(`${supabaseUrl}/rest/v1/tag?tag_id=eq.${tag_id}`, {
       method: 'DELETE',
       headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json'
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
       }
     });
 
