@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 // 환경 변수 확인
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+
 
 // 환경 변수 검증
 if (!supabaseUrl || !supabaseServiceKey) {
@@ -12,7 +14,7 @@ if (!supabaseUrl || !supabaseServiceKey) {
 // GET: 카테고리 목록 조회
 export async function GET(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
@@ -28,7 +30,7 @@ export async function GET(request: NextRequest) {
     const response = await fetch(`${supabaseUrl}/rest/v1/category${params}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -60,7 +62,7 @@ export async function GET(request: NextRequest) {
 // POST: 새 카테고리 추가
 export async function POST(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
@@ -91,7 +93,7 @@ export async function POST(request: NextRequest) {
       const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}`, {
         method: 'GET',
         headers: {
-          'apikey': supabaseServiceKey,
+          'apikey': supabaseKey,
           'Content-Type': 'application/json',
           "Authorization": `Bearer ${token}`
         }
@@ -111,7 +113,7 @@ export async function POST(request: NextRequest) {
       const response = await fetch(`${supabaseUrl}/rest/v1/category`, {
         method: 'POST',
         headers: {
-          'apikey': supabaseServiceKey,
+          'apikey': supabaseKey,
           "Authorization": `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
@@ -149,7 +151,7 @@ export async function POST(request: NextRequest) {
 // PATCH: 카테고리 이름 수정
 export async function PATCH(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
@@ -189,9 +191,8 @@ export async function PATCH(request: NextRequest) {
       const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
         method: 'GET',
         headers: {
-          'apikey': supabaseServiceKey,
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json'
         }
       });
 
@@ -214,9 +215,8 @@ export async function PATCH(request: NextRequest) {
       const duplicateResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_text=eq.${encodeURIComponent(category_text.trim())}&category_id=neq.${category_id}`, {
         method: 'GET',
         headers: {
-          'apikey': supabaseServiceKey,
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json'
         }
       });
 
@@ -234,7 +234,7 @@ export async function PATCH(request: NextRequest) {
       const response = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
         method: 'PATCH',
         headers: {
-          'apikey': supabaseServiceKey,
+          'apikey': supabaseKey,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation',
           "Authorization": `Bearer ${token}`
@@ -271,11 +271,20 @@ export async function PATCH(request: NextRequest) {
 // DELETE: 카테고리 삭제
 export async function DELETE(request: NextRequest) {
   try {
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: '서버 설정 오류' },
         { status: 500 }
       );
+    }
+
+    const token = request.cookies.get("jwt_token")?.value;
+        
+    if (!token) {
+        return NextResponse.json(
+            { error: "인증이 필요합니다" },
+            { status: 401 }
+        );
     }
 
     const body = await request.json();
@@ -293,7 +302,7 @@ export async function DELETE(request: NextRequest) {
     const checkResponse = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
@@ -314,14 +323,15 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 해당 카테고리를 사용하는 포스트가 있는지 확인
-    const postsResponse = await fetch(`${supabaseUrl}/rest/v1/posts?category=eq.${existingCategory[0].category_text}`, {
+    const postsResponse = await fetch(`${supabaseUrl}/rest/v1/posts?category=eq.${existingCategory[0].category_id}`, {
       method: 'GET',
       headers: {
-        'apikey': supabaseServiceKey,
+        'apikey': supabaseKey,
         'Content-Type': 'application/json'
       }
     });
 
+    console.log(postsResponse)
     if (postsResponse.ok) {
       const posts = await postsResponse.json();
       if (posts.length > 0) {
@@ -333,11 +343,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     // 카테고리 삭제
+
     const response = await fetch(`${supabaseUrl}/rest/v1/category?category_id=eq.${category_id}`, {
       method: 'DELETE',
       headers: {
-        'apikey': supabaseServiceKey,
-        'Content-Type': 'application/json'
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
       }
     });
 

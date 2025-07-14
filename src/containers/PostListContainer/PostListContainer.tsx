@@ -17,7 +17,7 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
     const params = useSearchParams()
 
     const category = params.get("category")
-    const tags =  params.get("tag")
+    const tags =  params.get("tags")
 
     useEffect(()=> {
         const fetchData = async () => {
@@ -28,8 +28,9 @@ const PostListContainer = ({initialPosts} : {initialPosts:PostInterface[]}) => {
             }
         
             if (tags) {
-                newParams.append('tag', tags as string);
+                newParams.append('tags', tags.split(",").map(tag=>tag.split("_")[1]).join(","));
             }
+
             if (newParams.toString() == '') { setPosts(initialPosts) }
 
             try {

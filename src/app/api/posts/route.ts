@@ -9,10 +9,10 @@ export async function GET(request: NextRequest) {
 
   const include_private = request.nextUrl.searchParams.get("is_public") ? request.nextUrl.searchParams.get("is_public") : null;
   const category = request.nextUrl.searchParams.get("category") ? request.nextUrl.searchParams.get("category") : null;
-  const tags = request.nextUrl.searchParams.get("tag") ? request.nextUrl.searchParams.get("tag")! : null;
+  const tags = request.nextUrl.searchParams.get("tags") ? `{${request.nextUrl.searchParams.get  ("tags")}}` : null;
 
 
-
+  console.log(tags)
   try {
     const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_filtered_posts_with_relations`, {
       method: 'POST',

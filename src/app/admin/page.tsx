@@ -166,11 +166,11 @@ const AdminPage = () => {
     const fetchTags = async () => {
     try {
         // 태그 API가 있다면 여기에 추가
-        // const response = await fetch(`http://${hostUrl}/api/tags`)
-        // if (response.ok) {
-        //   const data = await response.json()
-        //   setTagsData(data)
-        // }
+        const response = await fetch(`${hostUrl}/api/tag`)
+        if (response.ok) {
+          const data = await response.json()
+          setTagsData(data)
+        }
     } catch (error) {
         console.error('태그 데이터 가져오기 실패:', error)
     }
@@ -205,13 +205,13 @@ const AdminPage = () => {
     } else if (verifyResult.status === 401) {
         const refreshResult = await refreshToken()
         if (!refreshResult) {
-        window.location.href = '/login'
-        return
+            window.location.href = '/login'
+            return
         } else {
-        await fetchPosts()
-        await fetchCategories()
-        await fetchTags()
-        await fetchImages()
+            await fetchPosts()
+            await fetchCategories()
+            await fetchTags()
+            await fetchImages()
         }
     } else {
         setError(verifyResult.error)
@@ -254,7 +254,7 @@ const AdminPage = () => {
         }
         }
 
-        const handleTogglePublic = async (postId: string, currentStatus: boolean) => {
+    const handleTogglePublic = async (postId: string, currentStatus: boolean) => {
         try {
             const response = await fetch(`${hostUrl}/api/post?id=${postId}`, {
             method: 'PATCH',
@@ -278,18 +278,52 @@ const AdminPage = () => {
     }
 
     // 태그 추가
-    const handleAddTag = () => {
-    if (newTag.trim() && !tags.includes(newTag.trim())) {
-        setTags(prev => [...prev, newTag.trim()])
-        setNewTag("")
-    }
+    const handleAddTagToDB = async () => {
+        if (!newTag.trim()) return
+        
+        try {
+            const response = await fetch(`${hostUrl}/api/tag`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ tag_text: newTag.trim() }),
+            credentials: 'include'
+            })
+            
+            if (response.ok) {
+                setNewTag("")
+                await fetchTags() // 목록 새로고침
+            } else {
+                alert('태그 추가에 실패했습니다.')
+            }
+        } catch (error) {
+            alert('태그 추가 중 오류가 발생했습니다.')
+        }
     }
 
     // 태그 삭제
-    const handleDeleteTag = (tagToDelete: string) => {
-    if (confirm(`태그 "${tagToDelete}"를 삭제하시겠습니까?`)) {
-        setTags(prev => prev.filter(tag => tag !== tagToDelete))
-    }
+    const handleDeleteTagFromDB = async (tag_id: number ,tag_text: string) => {
+        if (confirm(`태그 "${tag_text}"를 삭제하시겠습니까?`)) {
+            try {
+            const response = await fetch(`${hostUrl}/api/tag`, {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tag_id: tag_id }),
+                credentials: 'include'
+            })
+            console.log(await response.json())
+            if (response.ok) {
+                await fetchTags() // 목록 새로고침
+            } else {
+                alert('태그 삭제에 실패했습니다.')
+            }
+            } catch (error) {
+            alert('태그 삭제 중 오류가 발생했습니다.')
+            }
+        }
     }
 
     // Supabase 카테고리 추가
@@ -326,10 +360,10 @@ const AdminPage = () => {
             headers: {
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: categoryId }),
+            body: JSON.stringify({ category_id: categoryId }),
             credentials: 'include'
         })
-        
+        console.log(await response.json())
         if (response.ok) {
             await fetchCategories() // 목록 새로고침
         } else {
@@ -563,11 +597,11 @@ const AdminPage = () => {
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
                     placeholder="새 태그 이름"
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddTagToDB()}
                     />
                     <button
                     className={styles.addItemButton}
-                    onClick={() => handleAddTag()}
+                    onClick={() => handleAddTagToDB()}
                     disabled={!newTag.trim()}
                     >
                     추가
@@ -587,13 +621,13 @@ const AdminPage = () => {
                         </div>
                         <button
                             className={styles.deleteItemButton}
-                            onClick={() => handleDeleteTag(tag.tag_text)}
+                            onClick={() => handleDeleteTagFromDB(tag.tag_id, tag.tag_text)}
                         >
                             삭제
                         </button>
                         </div>
                     ))
-                    ) : (
+                    ) : (    
                     <div className={styles.emptyState}>
                         등록된 태그가 없습니다.
                     </div>

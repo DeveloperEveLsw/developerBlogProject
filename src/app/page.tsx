@@ -27,7 +27,7 @@ interface Tag {
 
 function getTag():Tag[] {
   return [
-    { tag_id:1, tag_text:"개발과정" },
+    { tag_id:1, tag_text:"개발 과정" },
     { tag_id:2, tag_text:"python" },
     { tag_id:3, tag_text:"NEXTjs" },
     { tag_id:4, tag_text:"JAVA" }
@@ -38,7 +38,7 @@ export default async function Home() {
 
   let initialCategoryData
   let initialPostsData
-
+  let initialTagsData
   try {
     const posts = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/api/posts`);
 
@@ -51,6 +51,10 @@ export default async function Home() {
       // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch categories');
     }
+
+    const tags = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/api/tag`)
+
+    initialTagsData = await tags.json()
     initialCategoryData = await category.json();
     initialPostsData = await posts.json()
           .then(data => data.map((post: SupabasePostsInterface) => ({
@@ -74,7 +78,7 @@ export default async function Home() {
         <div>
           <LogoAnimation size={200}></LogoAnimation>
           <Suspense fallback={<div>로딩 중...</div>}>
-            <Tags tags={getTag()}></Tags>
+            <Tags tags={initialTagsData}></Tags>
             <SafeClientSuspense initialPosts={initialPostsData}></SafeClientSuspense>
           </Suspense>
         </div>
