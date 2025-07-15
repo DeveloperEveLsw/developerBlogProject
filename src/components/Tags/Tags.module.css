@@ -18,7 +18,7 @@
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     border: 1px solid #e0e0e0;
 }
-  
+
 .tagItem_selected {
     background-color: #ddfdff;
 }
@@ -32,3 +32,30 @@
     background-color: #e0e0e0; /* 호버 시 약간 어두워짐 */ /* 살짝 위로 뜨는 효과 */
 }
   
+@media (max-width: 479px) {
+    .tagContainer {
+        margin-top: 4px;
+        display: flex;
+        flex-wrap: nowrap;              /* 줄바꿈 방지 */
+        overflow-x: auto;               /* 가로 스크롤 활성화 */
+        -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+        gap: 8px;                       /* 버튼 간 간격 */
+        padding: 0px 10px;
+        width: 100%;
+        max-width: 100vw;
+        justify-content: flex-start;
+    }
+          
+    .tagContainer > .tagItem {
+        flex: 0 0 auto;
+    }
+
+    .tagContainer::-webkit-scrollbar {
+        display: none;                  /* 스크롤바 숨기기 (선택) */
+    }
+    
+    .tagItem {
+        padding: 7px 12px;
+    }
+      
+  }

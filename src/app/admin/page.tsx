@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './page.module.css'
 import ErrorPage from '@/components/ErrorPage/ErrorPage'
-
+import {revalidatePage} from '@/app/actions/revalidatePath'
 
 interface Post {
     id: string
@@ -147,6 +147,10 @@ const AdminPage = () => {
     } catch (error) {
         console.error('포스트 데이터 가져오기 실패:', error)
     }
+    }
+
+    const refreshHomePage = () => {
+        revalidatePage(`/`);
     }
 
     // 카테고리 데이터 가져오기
@@ -491,7 +495,14 @@ const AdminPage = () => {
 
             {/* 포스트 관리 탭 */}
             <div className={`${styles.tabContent} ${activeTab === 'posts' ? styles.active : ''}`}>
-            <h2 className={styles.sectionTitle}>포스트 관리</h2>
+            <h2 className={styles.sectionTitle}>포스트 관리
+                <button 
+                    style={{marginLeft:"10px"}}
+                    className={`${styles.smallButton} ${styles.editButton}`}
+                    onClick={() => refreshHomePage() }>
+                        게시글 캐싱 초기화
+                </button>
+            </h2>
             <div className={styles.postsList}>
                 {posts.map((post) => (
                 <div key={post.id} className={styles.postItem}>

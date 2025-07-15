@@ -24,3 +24,9 @@ padding: 10px 0px 10px 0px;
 overflow: hidden;
 text-overflow: ellipsis;
 }
+
+@media (max-width: 479px) {
+    .postBox {
+        padding: 0px 0px 10px 0px;
+    }
+}
