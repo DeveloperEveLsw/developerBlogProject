@@ -8,7 +8,12 @@ let form = [
     ['seconds', '%초']
 ]
 
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
 export function transformDate(stringDate: string, formString: any[], replaceKey: string = '%', pad: number=0) {
+
 
     const date = new Date(stringDate)
     const a = formString.map( ([key,format])=> {
