@@ -14,8 +14,12 @@ import timezone from 'dayjs/plugin/timezone';
 
 export function transformDate(stringDate: string, formString: any[], replaceKey: string = '%', pad: number=0) {
 
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
 
-    const date = new Date(stringDate)
+    const time = dayjs(stringDate).tz("Asia/Seoul");
+
+    const date = time.toDate()
     const a = formString.map( ([key,format])=> {
         let value: string | number = ''
         switch (key) {
