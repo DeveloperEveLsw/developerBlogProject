@@ -8,9 +8,6 @@ let form = [
     ['seconds', '%초']
 ]
 
-
-
-
 export function transformDate(stringDate: string, formString: any[], replaceKey: string = '%', pad: number=0) {
 
     const date = new Date(stringDate)

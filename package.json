@@ -13,6 +13,7 @@
     "@shikijs/themes": "^3.7.0",
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
+    "dayjs": "^1.11.13",
     "highlight.js": "^11.11.1",
     "jsonwebtoken": "^9.0.2",
     "marked": "^15.0.8",

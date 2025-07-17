@@ -7,15 +7,6 @@ import { notFound } from 'next/navigation'
 export const PostContainer = async (params: {id: string}) => {
   const hostUrl = process.env.NEXT_PUBLIC_HOST_URL
   const { id } = await params;
-  
-  const form = [
-    ['year',    '%'],
-    ['month',   '.%'],
-    ['date',    '.%'],
-    ['hours',   ' %:'],
-    ['minutes', '%:'],
-    ['seconds', '%']
-  ]
 
   interface PostInterface {
     id? : string,
@@ -36,11 +27,9 @@ export const PostContainer = async (params: {id: string}) => {
     
     if (alist.ok) {
       const data = await alist.json();
+      console.log(data[0].created_at)
       if (data && data.length > 0) {
-        post = data.map((post: SupabasePostsInterface) => ({
-          ...post,
-          created_at: transformDate(post.created_at, form)
-        }))[0];
+        post = data[0];
       }
     }
   } catch (error) { 
