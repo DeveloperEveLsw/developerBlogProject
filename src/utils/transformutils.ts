@@ -18,8 +18,9 @@ export function transformDate(stringDate: string, formString: any[], replaceKey:
     dayjs.extend(timezone);
 
     const time = dayjs(stringDate).tz("Asia/Seoul");
-
-    const date = time.toDate()
+    const formatted = time.format("YYYY-MM-DDTHH:mm:ss");
+    const date = new Date(formatted);
+    
     const a = formString.map( ([key,format])=> {
         let value: string | number = ''
         switch (key) {
