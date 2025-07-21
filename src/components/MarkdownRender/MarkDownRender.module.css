@@ -11,8 +11,8 @@
 }
 
 
-.markdownCntent ul,
-.markdownCntent ol {
+.markdownContent ul,
+.markdownContent ol {
   /* 리스트 들여쓰기 다시 적용 */
   padding-left: 2em;
   margin-top: 1em;
@@ -31,6 +31,12 @@
   margin-bottom: 1em;
 }
 
+.markdownContent blockquote {
+ /* 스크롤바 색상 */
+  padding: 10px;
+  border-left: rgb(228, 228, 228) solid 5px;
+  background-color: #f4f4f4
+}
 
 .markdownContent pre:not(:global(.mermaid)){
   overflow-x: auto;
@@ -86,4 +92,16 @@
   line-height: 1.3;
   font-family: 'Consolas';
   color: #222; 
+}
+
+
+
+.markdownContent a:link,.markdownContent a:hover,.markdownContent a:active {
+  color: rgb(0, 145, 255);
+  text-decoration: underline;
+}
+
+.markdownContent a:visited {
+  color: rgb(189, 83, 255);
+  text-decoration: underline;  
 }
